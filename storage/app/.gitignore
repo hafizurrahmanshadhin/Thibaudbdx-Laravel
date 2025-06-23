@@ -1,0 +1,6 @@
+*
+!private/
+!public/
+!.gitignore
+!firebase-auth.json
+!AuthKey_N6JWL6L5JQ.pem
