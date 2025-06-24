@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Customer;
+namespace App\Http\Controllers\Api\Client;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
@@ -9,7 +9,6 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-
 
 class CustomerController extends Controller
 {
@@ -22,7 +21,7 @@ class CustomerController extends Controller
             $userId = Auth::id();
 
             // Start query builder
-            $query = Customer::where('user_id', $userId)->where('contact_type', 'prospect');
+            $query = Customer::where('user_id', $userId)->where('contact_type', 'customer');
 
             if (!empty(trim($search))) {
                 $query->where(function ($q) use ($search) {
@@ -61,7 +60,7 @@ class CustomerController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'contact_type' => 'required|in:prospect,client,inactive',
+            'contact_type' => 'required|in:prospect,customer,inactive',
             'company_name' => 'required|string|max:200',
             'owner_name' => 'required|string|max:100',
             'address' => 'required|string|max:150',
@@ -107,7 +106,7 @@ class CustomerController extends Controller
     {
         try {
             $user = Auth::id();
-            $customer = Customer::where('user_id', $user)->where('contact_type', 'prospect')->find($id);
+            $customer = Customer::where('user_id', $user)->where('contact_type', 'customer')->find($id);
 
             if (!$customer) {
                 return Helper::jsonResponse(false, 'Customer Not Found!', 404);
@@ -134,7 +133,7 @@ class CustomerController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'contact_type' => 'nullable|in:prospect,client,inactive',
+                'contact_type' => 'nullable|in:prospect,customer,inactive',
                 'company_name' => 'nullable|string|max:200',
                 'owner_name' => 'nullable|string|max:150',
                 'address' => 'nullable|string|max:150',
@@ -157,7 +156,7 @@ class CustomerController extends Controller
             $data = $validator->validated();
             $data['user_id'] = Auth::id();
 
-            $customer = Customer::where('user_id', Auth::id())->where('contact_type', 'prospect')->find($id);
+            $customer = Customer::where('user_id', Auth::id())->where('contact_type', 'customer')->find($id);
             if (!$customer) {
                 return Helper::jsonResponse(false, 'Customer Not Found!', 404);
             }
@@ -194,7 +193,7 @@ class CustomerController extends Controller
     {
         try {
             $userId = Auth::id();
-            $customer = Customer::where('user_id', $userId)->where('contact_type', 'prospect')->find($id);
+            $customer = Customer::where('user_id', $userId)->where('contact_type', 'customer')->find($id);
 
             if (!$customer) {
                 return Helper::jsonResponse(false, 'Customer Not Found!', 404);
@@ -206,10 +205,8 @@ class CustomerController extends Controller
                 $oldImagePath = ltrim($parsedUrl, '/');
                 Helper::fileDelete($oldImagePath);
             }
-
             $customer->delete();
-
-            return Helper::jsonResponse(true, 'Customer Deleted Successfully!', 200);
+            return Helper::jsonResponse(true, 'Customer Deleted Successfully!', 200,);
         } catch (\Exception $e) {
             return Helper::jsonResponse(false, 'Failed :', 500, [$e->getMessage()]);
         }

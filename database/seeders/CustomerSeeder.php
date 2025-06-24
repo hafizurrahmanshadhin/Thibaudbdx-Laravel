@@ -24,7 +24,7 @@ class CustomerSeeder extends Seeder
         }
 
         for ($i = 1; $i <= 10; $i++) {
-            $contactType = ($i <= 5) ? 'prospect' : 'client';
+            $contactType = ($i <= 5) ? 'prospect' : 'customer';
             $cityIndex = $i % count($cities);
             $addressIndex = $i % count($address);
             $customerData[] = [

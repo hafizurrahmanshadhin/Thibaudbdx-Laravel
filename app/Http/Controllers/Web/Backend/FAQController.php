@@ -18,7 +18,7 @@ class FAQController extends Controller {
      * Display the listing of faqs.
      *
      * @param Request $request
-     * @return View|JsonResponse
+     * @return View|JsonResponsep
      * @throws Exception
      */
     public function index(Request $request): View | JsonResponse {
