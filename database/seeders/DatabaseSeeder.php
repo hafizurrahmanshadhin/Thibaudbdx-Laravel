@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             MeetingSeeder::class,
             TaskSeeder::class,
             TastingSeeder::class,
+            DocsSeeder::class,
         ]);
     }
 }

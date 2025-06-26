@@ -156,7 +156,7 @@ class CustomerController extends Controller
             $data = $validator->validated();
             $data['user_id'] = Auth::id();
 
-            $customer = Customer::where('user_id', Auth::id())->where('contact_type', 'customer')->find($id);
+            $customer = Customer::where('user_id', Auth::id())->find($id);
             if (!$customer) {
                 return Helper::jsonResponse(false, 'Customer Not Found!', 404);
             }

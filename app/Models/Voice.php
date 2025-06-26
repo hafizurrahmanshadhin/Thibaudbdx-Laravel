@@ -7,12 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Voice extends Model
 {
     protected $guarded = [];
-    protected $hidden = ['updated_at', 'deleted_at','customer','customer_id'];
+    protected $hidden = ['updated_at', 'deleted_at', 'customer', 'customer_id', 'user_id'];
 
 
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
 

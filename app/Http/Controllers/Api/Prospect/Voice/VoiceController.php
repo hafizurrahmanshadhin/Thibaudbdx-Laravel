@@ -20,17 +20,15 @@ class VoiceController extends Controller
             $search = $request->query('search', '');
             $per_page = $request->query('per_page', 50);
             $customerId = $request->query('customer_id');
+            $userId = Auth::user()->id;
 
-            $voice = Voice::with('customer:id,contact_type,user_id')
+            $voice = Voice::where('user_id', $userId)->where('customer_id', $customerId)
                 ->whereHas('customer', function ($q) {
-                    $q->where('contact_type', 'prospect')->where('user_id', Auth::user()->id);
-                })->where('customer_id', $customerId)
-
-                ->when(!empty(trim($search)), function ($q) use ($search) {
+                    $q->where('contact_type', 'prospect');
+                })->when(!empty(trim($search)), function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%");
-                })
-                ->select('id', 'title', 'voice_file', 'description', 'created_at')
-                ->paginate($per_page);
+                })->paginate($per_page);
+
 
             if (!empty($search) && $voice->isEmpty()) {
                 return Helper::jsonResponse(false, 'No Voice found for the given search.', 404);
@@ -58,7 +56,6 @@ class VoiceController extends Controller
     }
 
 
-
     //create-voice api
     public function create(Request $request)
     {
@@ -81,7 +78,7 @@ class VoiceController extends Controller
             if (!$filePath) {
                 return response()->json(['error' => 'Voice file upload failed.'], 400);
             }
-            $customer = Customer::where('id', $request->input('customer_id'))->where('contact_type', 'prospect')->first();
+            $customer = Customer::where('user_id', Auth::id())->where('id', $request->input('customer_id'))->where('contact_type', 'prospect')->first();
 
             if (!$customer) {
                 return Helper::jsonResponse(false, 'Invalid Customer', 403);
@@ -90,6 +87,7 @@ class VoiceController extends Controller
             // Save to database
             $voice = Voice::create([
                 'title'        => $request->input('title'),
+                'user_id'      => Auth::id(),
                 'customer_id'  => $request->input('customer_id'),
                 'description'  => $request->input('description'),
                 'voice_file'   => $filePath,
@@ -110,8 +108,8 @@ class VoiceController extends Controller
     {
         try {
             $customerId = $request->query('customer_id');
-
-            $voice = Voice::where('id', $id)->where('customer_id', $customerId)
+            $userId = Auth::user()->id;
+            $voice = Voice::where('user_id', $userId)->where('id', $id)->where('customer_id', $customerId)
                 ->whereHas('customer', function ($query) {
                     $query->whereIn('contact_type', ['prospect'])->where('user_id', Auth::user()->id);
                 })->first();
@@ -181,7 +179,7 @@ class VoiceController extends Controller
                 })->first();
 
             if (!$voice) {
-                return Helper::jsonResponse(false, 'Voice Not Found ?', 404);
+                return Helper::jsonResponse(false, 'Voice Not Found .', 404);
             }
 
             $voice->delete();

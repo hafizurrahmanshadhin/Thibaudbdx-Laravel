@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends Controller
 {
+
+    // client acitvity list api
     public function ActivityList(Request $request)
     {
         try {

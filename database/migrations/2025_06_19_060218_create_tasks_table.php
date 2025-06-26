@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
+            $table->foreignId('customer_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->date('date')->nullable();
             $table->text('description')->nullable();
-            $table->enum('status', ['active', 'inactive', 'in_progress', 'upcoming', 'complated'])->default('active');
+            $table->enum('status', ['active', 'inactive', 'in_progress', 'upcoming', 'completed'])->default('active');
             $table->timestamps();
             $table->softDeletes();
         });

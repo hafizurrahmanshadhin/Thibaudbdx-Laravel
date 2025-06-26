@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TagController extends Controller
 {
@@ -15,8 +16,8 @@ class TagController extends Controller
         try {
             $search = $request->query('search', '');
             $per_page = $request->query('per_page', 10);
-
-            $tag = Tag::select('name', 'color', 'created_at');
+            $userId = Auth::user()->id;
+            $tag = Tag::where('user_id', $userId)->select('name', 'color', 'created_at');
 
             if (!empty(trim($search))) {
                 $tag->where(function ($q) use ($search) {
@@ -53,6 +54,7 @@ class TagController extends Controller
             ]);
 
             $data = Tag::create([
+                "user_id" => Auth::user()->id,
                 "name" => $request->input("name"),
                 "color" => $request->input("color"),
             ]);
@@ -70,8 +72,12 @@ class TagController extends Controller
     public function details(Request $request, $id)
     {
         try {
-            $tag = Tag::findOrFail($id);
-            return Helper::jsonResponse(true, 'Tag Created Successfully !', 200, [
+            $userId = Auth::user()->id;
+            $tag = Tag::where('user_id', $userId)->find($id);
+            if (!$tag) {
+                return Helper::jsonResponse(false, 'Tag Not Found', 404,);
+            }
+            return Helper::jsonResponse(true, 'Tag Details Successfully !', 200, [
                 'data' => $tag
             ]);
         } catch (\Exception $e) {
@@ -89,8 +95,13 @@ class TagController extends Controller
                 'name' => 'nullable|max:100',
                 'color' => 'nullable|max:100',
             ]);
+            $userId = Auth::user()->id;
+            $tag = Tag::where('user_id', $userId)->find($id);
 
-            $tag = Tag::findOrFail($id);
+            if (!$tag) {
+                return Helper::jsonResponse(false, 'Tag Not Found', 404,);
+            }
+
             $tag->update($validated);
 
             return Helper::jsonResponse(true, 'Tag updated successfully.', 200, [
@@ -107,7 +118,13 @@ class TagController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $tag = Tag::findOrFail($id);
+            $userId = Auth::user()->id;
+            $tag = Tag::where('user_id', $userId)->find($id);
+
+            if (!$tag) {
+                return Helper::jsonResponse(false, 'Tag Not Found', 404,);
+            }
+
             $tag->delete();
             return Helper::jsonResponse(true, 'Tag Deleted successfully.', 200,);
         } catch (\Exception $e) {

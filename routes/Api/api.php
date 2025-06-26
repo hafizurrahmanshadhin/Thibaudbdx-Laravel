@@ -4,11 +4,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ContentController;
 use App\Http\Controllers\Api\Customer\CustomerController;
 use App\Http\Controllers\Api\Tag\TagController;
+use App\Http\Controllers\Api\User\HomepageController;
 
 // This route is for getting terms and conditions and privacy policy.
 Route::get('contents', [ContentController::class, 'index'])->middleware(['throttle:10,1']);
 
-
+//home page route
+Route::controller(HomepageController::class)->middleware('auth.jwt')->group(function () {
+    Route::get('/upcommig-meeting', 'upcomingMeetings');
+    Route::get('/upcomming-task', 'upcomingTask');
+});
 
 Route::controller(TagController::class)->middleware('auth.jwt')->group(function () {
     Route::get('/tag-list', 'index');
@@ -26,6 +31,11 @@ Route::controller(CustomerController::class)->middleware('auth.jwt')->group(func
     Route::post('/customer-update/{id}', 'update');
     Route::delete('/customer-destroy/{id}', 'destroy');
 });
+
+//User Nodes(node,voice)|Tasting
+require "User/notes-tasting.php";
+require "User/Tasting.php";
+
 
 //--Prospect customer route link
 require "v1/product/Product.php";

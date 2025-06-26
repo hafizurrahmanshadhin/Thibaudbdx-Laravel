@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Docs extends Model
 {
     protected $guarded = [];
-    protected $hidden = ['updated_at', 'deleted_at', 'status', 'customer_id'];
+    protected $hidden = ['updated_at', 'deleted_at', 'status', 'user_id', 'customer_id'];
 
 
 
@@ -16,6 +16,10 @@ class Docs extends Model
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     //live link 
     public function getFileAttribute($value): ?string

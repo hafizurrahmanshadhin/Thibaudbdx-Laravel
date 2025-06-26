@@ -16,13 +16,14 @@ class TastingSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 5) as $i) {
+        foreach (range(1, 13) as $i) {
             Tasting::create([
-                'customer_id' => 1,
+                'customer_id' => $i <= 5 ? 1 : ($i <= 10 ? 6 : null), // 1-5 → 1, 6-10 → 6, 11-13 → null
+                'user_id' => 4,
                 'name' => 'Tasting ' . $i,
-                'product_id' => json_encode([$faker->numberBetween(1, 5), $faker->numberBetween(6, 8)]),
+                'product_id' => json_encode([$faker->numberBetween(1, 5), $faker->numberBetween(6, 8),]),
                 'description' => $faker->sentence,
-                'status' =>'active',
+                'status' => 'active',
             ]);
         }
     }

@@ -10,14 +10,16 @@ use App\Models\Content;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
-class ContentController extends Controller {
+class ContentController extends Controller
+{
     /**
      * Display the specified resource.
      *
      * @param ContentRequest $request
      * @return JsonResponse
      */
-    public function index(ContentRequest $request): JsonResponse {
+    public function index(ContentRequest $request): JsonResponse
+    {
         try {
             $validated = $request->validated();
 

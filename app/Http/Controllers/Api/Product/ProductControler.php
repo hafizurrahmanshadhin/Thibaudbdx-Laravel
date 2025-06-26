@@ -19,7 +19,7 @@ class ProductControler extends Controller
     public function index(Request $request)
     {
         try {
-            $perPage = $request->query('per_page', 50);
+            $perPage = $request->query('per_page', 25);
             $userId = Auth::id();
             // Start query builder
             $products = Product::where('user_id', $userId)->paginate($perPage);;

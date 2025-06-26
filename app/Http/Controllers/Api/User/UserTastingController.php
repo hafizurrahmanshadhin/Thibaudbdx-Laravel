@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Client\Tasting;
+namespace App\Http\Controllers\Api\User;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
@@ -10,20 +10,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class TastingController extends Controller
+class UserTastingController extends Controller
 {
     //list api 
-    public function index(Request $request)
+    public function tastingList(Request $request)
     {
         try {
-            $customerId = $request->query('customer_id');
             $per_page = $request->query('per_page', 50);
-
-            $Tasting = Tasting::with('customer:id,contact_type,user_id')
-                ->whereHas('customer', function ($q) {
-                    $q->where('contact_type', 'customer')->where('user_id', Auth::user()->id);
-                })->where('customer_id', $customerId)
-                ->paginate($per_page);
+            $userId = Auth::user()->id;
+            $Tasting =  Tasting::where('user_id', $userId)->whereNull('customer_id')->paginate($per_page);
 
             if (!$Tasting) {
                 return Helper::jsonResponse(false, 'Not Found!', 404);
@@ -43,10 +38,9 @@ class TastingController extends Controller
     }
 
     //---Testing create
-    public function create(Request $request)
+    public function tastingCreate(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'customer_id' => 'required|exists:customers,id',
             'name' => 'required|string|max:255|unique:tastings,name',
             'product_id' => 'required|array',
             'description' => 'required|string|max:600',
@@ -57,7 +51,8 @@ class TastingController extends Controller
         }
 
         $data = $validator->validated();
-        $data['user_id'] = Auth::user()->id;
+        $data['user_id'] = Auth::id();
+
 
 
         $customer = Tasting::create($data);
@@ -70,18 +65,12 @@ class TastingController extends Controller
         ]);
     }
 
-
     //--tasting-details
-    public function details(Request $request, $id)
+    public function tastingdetails(Request $request, $id)
     {
         try {
-            $customerId = $request->query('customer_id');
-
-            $tasting = Tasting::where('id', $id)->where('customer_id', $customerId)
-                ->whereHas('customer', function ($query) {
-                    $query->where('contact_type', 'customer')
-                        ->where('user_id', Auth::id());
-                })->first();
+            $userId = Auth::user()->id;
+            $tasting = Tasting::where('id', $id)->where('user_id', $userId)->whereNull('customer_id')->first();
 
             if (!$tasting) {
                 return Helper::jsonResponse(false, 'Tasting Not Found!', 404);
@@ -101,13 +90,12 @@ class TastingController extends Controller
         }
     }
 
-    //--- Tasting Update api
-    public function update(Request $request, $id)
+    // User Tasting update 
+    public function tastingUpdate(Request $request, $id)
     {
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'nullable|string|max:200',
-                'customer_id' => 'nullable|exists:customers,id',
                 'description' => 'nullable|string|max:500',
                 'product_id' => 'required|array',
             ]);
@@ -120,17 +108,14 @@ class TastingController extends Controller
             $userId = Auth::id();
 
             //Tasting validation
-            $tasting = Tasting::where('id', $id)->where('customer_id', $data['customer_id'])
-                ->whereHas('customer', function ($q) use ($userId) {
-                    $q->where('user_id', $userId)->where('contact_type', 'customer');
-                })->first();
+            $tasting = Tasting::where('id', $id)->where('user_id', $userId)->whereNull('customer_id')->first();
 
             if (!$tasting) {
-                return Helper::jsonResponse(false, 'Tasting not found .', 404);
+                return Helper::jsonResponse(false, 'Tasting not found.', 404);
             }
 
             $tasting->update($data);
-            $productIds = is_array($tasting->product_id) ? $tasting->product_id : json_decode($tasting->product_id ?? '[]', true);
+            $productIds = $data['product_id'];
 
             $products = Product::whereIn('id', $productIds)->get(['id', 'wine_name']);
             return Helper::jsonResponse(true, 'Tasting updated successfully.', 200, [
@@ -138,31 +123,26 @@ class TastingController extends Controller
                 'product_Name' => $products,
             ]);
         } catch (\Exception $e) {
-            return Helper::jsonResponse(false, 'Server Error :', 500, [
+            return Helper::jsonResponse(false, 'Server Error:', 500, [
                 'error' => $e->getMessage()
             ]);
         }
     }
 
-    //--Tasting delete
-    public function destroy(Request $request, $id)
+    //--User Tasting delete
+    public function tastingDestroy(Request $request, $id)
     {
         try {
-            $customerId = $request->query('customer_id');
             $userId = Auth::id();
 
-            $tasting = Tasting::where('id', $id)->where('customer_id', $customerId)
-                ->whereHas('customer', function ($q) use ($userId) {
-                    $q->where('user_id', $userId)->where('contact_type', 'customer');
-                })->first();
+            $tasting = Tasting::where('id', $id)->where('user_id', $userId)->whereNull('customer_id')->first();
 
             if (!$tasting) {
                 return Helper::jsonResponse(false, 'Tasting Not Found ?', 404);
             }
 
             $tasting->delete();
-
-            return Helper::jsonResponse(true, 'Tasting deleted successfully.', 200);
+            return Helper::jsonResponse(true, 'Tasting deleted successfully.', 200, $tasting);
         } catch (\Exception $e) {
             return Helper::jsonResponse(false, 'Server Error', 500, [
                 'error' => $e->getMessage()

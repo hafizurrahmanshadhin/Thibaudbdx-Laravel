@@ -19,19 +19,24 @@ class DocumentController extends Controller
         try {
             $per_page = $request->query('per_page', 50);
             $customerId = $request->query('customer_id');
+            $userId = Auth::id();
 
-            $document = Docs::with('customer:id,contact_type,user_id')
+            if (!$customerId) {
+                return Helper::jsonResponse(false, 'customer_id is required', 400);
+            }
+
+            $document = Docs::where('user_id', $userId)->where('customer_id', $customerId)
                 ->whereHas('customer', function ($q) {
-                    $q->where('contact_type', 'prospect')->where('user_id', Auth::user()->id);
-                })->where('customer_id', $customerId)->select('id', 'file', 'created_at')->paginate($per_page);
+                    $q->where('contact_type', 'prospect');
+                })->paginate($per_page);
 
             if ($document->isEmpty()) {
-                return Helper::jsonResponse(true, 'documents Data Empty ', 200, [
+                return Helper::jsonResponse(true, 'Documents data empty.', 200, [
                     'documents' => [],
                 ]);
             }
 
-            return Helper::jsonResponse(true, 'document list retrieved successfully.', 200, [
+            return Helper::jsonResponse(true, 'Document list retrieved successfully.', 200, [
                 'documents' => $document->items(),
                 'pagination' => [
                     'current_page' => $document->currentPage(),
@@ -156,12 +161,7 @@ class DocumentController extends Controller
             }
         }
 
-        return Helper::jsonResponse(
-            true,
-            'Documents uploaded successfully.',
-            201,
-            $uploadedDocs
-        );
+        return Helper::jsonResponse(true, 'Documents uploaded successfully.', 201, $uploadedDocs);
     }
 
     protected function convertImagesToPdf(array $imageFiles): ?string
@@ -200,12 +200,14 @@ class DocumentController extends Controller
             return Docs::create([
                 'customer_id' => $customerId,
                 'file' => $filePath,
+                'user_id' => Auth::id(),
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to store PDF in DB: ' . $e->getMessage());
             return null;
         }
     }
+
 
     //details api
     public function details(Request $request, $id)

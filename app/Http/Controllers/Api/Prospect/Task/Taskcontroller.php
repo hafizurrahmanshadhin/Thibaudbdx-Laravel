@@ -12,24 +12,22 @@ use Illuminate\Support\Facades\Validator;
 
 class Taskcontroller extends Controller
 {
-       // -- task list api
+    // -- task list api
     public function index(Request $request)
     {
         try {
             $search = $request->query('search', '');
             $per_page = $request->query('per_page', 50);
             $customerId = $request->query('customer_id');
+            $userId = Auth::user()->id;
 
-            $task = Task::with('customer:id,contact_type,user_id')
+            $task = Task::where('user_id', $userId)->where('customer_id', $customerId)
                 ->whereHas('customer', function ($q) {
-                    $q->where('contact_type', 'prospect')->where('user_id', Auth::user()->id);
-                })->where('customer_id', $customerId)
-
-                ->when(!empty(trim($search)), function ($q) use ($search) {
+                    $q->where('contact_type', 'prospect');
+                })->when(!empty(trim($search)), function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%");
-                })
-                ->select('id', 'name', 'description', 'date', 'created_at')
-                ->paginate($per_page);
+                })->paginate($per_page);
+
 
             if (!empty($search) && $task->isEmpty()) {
                 return Helper::jsonResponse(false, 'No task found for the given search.', 404);
@@ -71,10 +69,10 @@ class Taskcontroller extends Controller
             }
 
             $data = $validator->validated();
+            $data['user_id'] = Auth::user()->id;
 
             // Check customer contact_type prospect
-            $customer = Customer::where('id', $data['customer_id'])
-                ->where('contact_type', 'prospect')->first();
+            $customer = Customer::where('id', $data['customer_id'])->where('contact_type', 'prospect')->first();
 
             if (!$customer) {
                 return Helper::jsonResponse(false, 'Invalid Customer or Not Allowed Type Client', 403);
@@ -82,11 +80,9 @@ class Taskcontroller extends Controller
 
             $task = Task::create($data);
 
-            return Helper::jsonResponse(true, 'Task Created Successfully!', 200, [
-                'data' => $task
-            ]);
+            return Helper::jsonResponse(true, 'Task Created Successfully!', 201, $task);
         } catch (\Exception $e) {
-            return Helper::jsonResponse(false, 'Task Create Failed!', 500, [
+            return Helper::jsonResponse(false, 'Task Create Failed ?', 500, [
                 'error' => $e->getMessage(),
             ]);
         }
@@ -97,10 +93,11 @@ class Taskcontroller extends Controller
     {
         try {
             $customerId = $request->query('customer_id');
+            $userId = Auth::user()->id;
 
-            $task = Task::where('id', $id)->where('customer_id', $customerId)
+            $task = Task::where('id', $id)->where('user_id', $userId)->where('customer_id', $customerId)
                 ->whereHas('customer', function ($query) {
-                    $query->whereIn('contact_type', ['prospect'])->where('user_id', Auth::user()->id);
+                    $query->where('contact_type', 'prospect')->where('user_id', Auth::user()->id);
                 })->first();
 
             if (!$task) {
@@ -166,7 +163,7 @@ class Taskcontroller extends Controller
                 })->first();
 
             if (!$task) {
-                return Helper::jsonResponse(false, 'Task Not Found ? or access denied.', 404);
+                return Helper::jsonResponse(false, 'Task Not Found  or access denied.', 404);
             }
 
             $task->delete();

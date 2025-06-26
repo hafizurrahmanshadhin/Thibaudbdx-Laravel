@@ -61,7 +61,7 @@ class CustomerController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'contact_type' => 'required|in:prospect,client,inactive',
+            'contact_type' => 'required|in:prospect,customer,inactive',
             'company_name' => 'required|string|max:200',
             'owner_name' => 'required|string|max:100',
             'address' => 'required|string|max:150',
@@ -134,7 +134,7 @@ class CustomerController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'contact_type' => 'nullable|in:prospect,client,inactive',
+                'contact_type' => 'nullable|in:prospect,customer,inactive',
                 'company_name' => 'nullable|string|max:200',
                 'owner_name' => 'nullable|string|max:150',
                 'address' => 'nullable|string|max:150',
@@ -157,7 +157,7 @@ class CustomerController extends Controller
             $data = $validator->validated();
             $data['user_id'] = Auth::id();
 
-            $customer = Customer::where('user_id', Auth::id())->where('contact_type', 'prospect')->find($id);
+            $customer = Customer::where('user_id', Auth::id())->find($id);
             if (!$customer) {
                 return Helper::jsonResponse(false, 'Customer Not Found!', 404);
             }
@@ -173,6 +173,8 @@ class CustomerController extends Controller
                 $uploadedImage = Helper::fileUpload($request->file('image'), 'customers', $request->input('owner_name'));
                 $data['image'] = $uploadedImage;
             }
+
+
             $customer->update($data);
             //tag get and show
             $tags = collect($customer->tag_id)->isNotEmpty() ? Tag::whereIn('id', $customer->tag_id)->get(['id', 'name', 'color']) : [];

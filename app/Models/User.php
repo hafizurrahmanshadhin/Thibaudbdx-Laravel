@@ -9,17 +9,16 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject {
+class User extends Authenticatable implements JWTSubject
+{
     use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
 
     protected $guarded = [];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token',];
 
-    protected function casts(): array {
+    protected function casts(): array
+    {
         return [
             'id'                   => 'integer',
             'email_verified_at'    => 'datetime',
@@ -44,11 +43,32 @@ class User extends Authenticatable implements JWTSubject {
         ];
     }
 
-    public function getJWTIdentifier() {
+    public function getJWTIdentifier()
+    {
         return $this->getKey();
     }
 
-    public function getJWTCustomClaims(): array {
+    public function getJWTCustomClaims(): array
+    {
         return [];
+    }
+
+
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+    public function voices()
+    {
+        return $this->hasMany(Voice::class);
+    }
+    public function tastings()
+    {
+        return $this->hasMany(Tasting::class);
     }
 }

@@ -24,12 +24,12 @@ class TagSeeder extends Seeder
             'Food',
             'Sports',
             'Music',
-            'Entertainment',
+            'Entertainment',0
         ];
 
         foreach ($tagNames as $name) {
             DB::table('tags')->insert([
-                'user_id' =>4,
+                'user_id' => 4,
                 'name' => $name,
                 'color' => sprintf('#%06X', mt_rand(0, 0xFFFFFF)),
                 'status' => 'active',

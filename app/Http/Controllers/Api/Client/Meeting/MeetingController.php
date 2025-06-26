@@ -21,17 +21,15 @@ class MeetingController extends Controller
             $search = $request->query('search', '');
             $per_page = $request->query('per_page', 50);
             $customerId = $request->query('customer_id');
+            $userId = Auth::user()->id;
 
-            $meeting = Meeting::with('customer:id,contact_type,user_id')
+            $meeting = Meeting::where('user_id', $userId)->where('customer_id', $customerId)
                 ->whereHas('customer', function ($q) {
-                    $q->where('contact_type', 'customer')->where('user_id', Auth::user()->id);
-                })->where('customer_id', $customerId)
-
-                ->when(!empty(trim($search)), function ($q) use ($search) {
+                    $q->where('contact_type', 'customer');
+                })->when(!empty(trim($search)), function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%");
-                })
-                ->select('id', 'name', 'customer_id', 'reminder_time', 'reminder', 'description', 'date', 'time')
-                ->paginate($per_page);
+                })->paginate($per_page);
+
 
             if (!empty($search) && $meeting->isEmpty()) {
                 return Helper::jsonResponse(false, 'No meeting found for the given search.', 404);
@@ -77,10 +75,10 @@ class MeetingController extends Controller
             }
 
             $data = $validator->validated();
+            $data['user_id'] = Auth::user()->id;
 
             // Check customer contact_type customer
-            $customer = Customer::where('id', $data['customer_id'])
-                ->where('contact_type', 'customer')->first();
+            $customer = Customer::where('id', $data['customer_id'])->where('contact_type', 'customer')->first();
 
             if (!$customer) {
                 return Helper::jsonResponse(false, 'Invalid Customer or Not Allowed Type Client', 403);
@@ -121,10 +119,11 @@ class MeetingController extends Controller
     {
         try {
             $customerId = $request->query('customer_id');
-            $meeting = Meeting::where([['id', '=', $id], ['customer_id', '=', $customerId], ['status', '=', 'active'],])->whereHas('customer', function ($query) {
-                $query->where('contact_type', 'customer')
-                    ->where('user_id', Auth::id());
-            })->first();
+            $meeting = Meeting::where([['id', '=', $id], ['customer_id', '=', $customerId], ['status', '=', 'active'],])
+                ->whereHas('customer', function ($query) {
+                    $query->where('contact_type', 'customer')
+                        ->where('user_id', Auth::id());
+                })->first();
 
             if (!$meeting) {
                 return Helper::jsonResponse(false, 'Meeting Not Found .', 404);
@@ -197,7 +196,7 @@ class MeetingController extends Controller
                 })->first();
 
             if (!$meeting) {
-                return Helper::jsonResponse(false, 'Meeting Failed ? or access denied.', 404);
+                return Helper::jsonResponse(false, 'Meeting Delete Failed ? or access denied.', 404);
             }
 
             $meeting->delete();

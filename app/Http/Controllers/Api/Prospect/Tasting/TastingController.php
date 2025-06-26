@@ -12,14 +12,15 @@ use Illuminate\Support\Facades\Validator;
 
 class TastingController extends Controller
 {
-     //list api 
+    //list api 
     public function index(Request $request)
     {
         try {
             $customerId = $request->query('customer_id');
             $per_page = $request->query('per_page', 50);
+            $userId = Auth::id();
 
-            $Tasting =  Tasting::where('customer_id', $customerId)->paginate($per_page);
+            $Tasting =  Tasting::where('user_id', $userId)->where('customer_id', $customerId)->paginate($per_page);
 
             if (!$Tasting) {
                 return Helper::jsonResponse(false, 'Not Found!', 404);
@@ -34,7 +35,7 @@ class TastingController extends Controller
                 ],
             ]);
         } catch (\Exception $e) {
-            return Helper::jsonResponse(false, 'Error occurred:', 500, [$e->getMessage()]);
+            return Helper::jsonResponse(false, 'Error :', 500, [$e->getMessage()]);
         }
     }
 
@@ -53,6 +54,7 @@ class TastingController extends Controller
         }
 
         $data = $validator->validated();
+        $data['user_id'] = Auth::id();
 
 
         $customer = Tasting::create($data);
