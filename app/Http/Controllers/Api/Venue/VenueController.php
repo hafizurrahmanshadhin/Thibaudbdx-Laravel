@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\Venue;
+namespace App\Http\Controllers\Api\Venue;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;

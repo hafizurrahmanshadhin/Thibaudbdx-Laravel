@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\Product\ProductControler;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\Web\Frontend\HomeController;
 use App\Http\Controllers\Web\Frontend\PageController;

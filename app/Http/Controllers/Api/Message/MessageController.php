@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\Message;
+namespace App\Http\Controllers\Api\Message;
 
 use App\Enums\NotificationType;
 use App\Events\MessageEvent;

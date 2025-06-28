@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\V1\Firebase;
+namespace App\Http\Controllers\Api\V1\Firebase;
 
 use App\Http\Controllers\Controller;
 use App\Models\FirebaseToken;
