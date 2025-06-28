@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\Entertrainer;
+namespace App\Http\Controllers\Api\Entertrainer;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;

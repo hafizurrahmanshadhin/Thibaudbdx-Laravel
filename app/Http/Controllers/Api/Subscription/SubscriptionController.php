@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\Subscription;
+namespace App\Http\Controllers\Api\Subscription;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
