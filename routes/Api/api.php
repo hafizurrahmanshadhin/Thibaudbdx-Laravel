@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CMS\FaqController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ContentController;
 use App\Http\Controllers\Api\Customer\CustomerController;
@@ -55,11 +56,10 @@ require "v2/Tasting/Tasting.php";
 require "v2/activity/activity.php";
 require "v2/document/document.php";
 
-
-
-
-
-
-
 //csv file upload 
 require "CSV/CustomerCSVImport.php";
+
+//Faq 
+Route::controller(FaqController::class)->middleware('auth.jwt')->group(function () {
+    Route::get('/list-faq', 'list');
+});

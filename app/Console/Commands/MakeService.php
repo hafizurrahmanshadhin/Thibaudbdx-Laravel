@@ -3,97 +3,189 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\File;
 
-class MakeService extends Command {
+class MakeService extends Command
+{
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'make:service {name}';
+    protected $signature = 'make:service {name : The name of the service class, including optional subfolders}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new service class';
-
-    protected $filesystem;
-
-    public function __construct(Filesystem $filesystem) {
-        parent::__construct();
-        $this->filesystem = $filesystem;
-    }
+    protected $description = 'Create a new service class with standard methods and try-catch blocks';
 
     /**
      * Execute the console command.
      */
-    public function handle() {
-        $name         = $this->argument('name');
-        $namespace    = str_replace('/', '\\', dirname($name)); // Get the namespace without the class name
-        $className    = basename($name); // Get the class name (e.g., 'SocialLoginService')
-        $serviceClass = $this->generateServiceClass($name);
+    public function handle()
+    {
+        $name = $this->argument('name');
 
-        // Define the full path to the services directory
-        $directory = app_path("Services/{$namespace}");
+        // Extract subdirectories and class name
+        $pathParts = explode('/', $name);
+        $className = array_pop($pathParts);
+        $namespace = implode('\\', $pathParts);
 
-        // Ensure the directory exists (create it if it doesn't)
-        if (!$this->filesystem->exists($directory)) {
-            $this->filesystem->makeDirectory($directory, 0755, true); // Create any missing directories
+        $directory = app_path('Services/' . implode('/', $pathParts));
+        $filePath = $directory . '/' . $className . '.php';
+
+        // Ensure the directory exists
+        if (!File::exists($directory)) {
+            File::makeDirectory($directory, 0755, true);
+            $this->info('Services directory created.');
         }
 
-        // Define the path for the new service class file
-        $path = $directory . DIRECTORY_SEPARATOR . "{$className}.php";
-
-        // Check if the service class already exists
-        if ($this->filesystem->exists($path)) {
-            $this->error("Service class {$name} already exists!");
-            return;
+        // Check if the file already exists
+        if (File::exists($filePath)) {
+            $this->error("Service {$className} already exists!");
+            return Command::FAILURE;
         }
 
-        // Create the service class file
-        $this->filesystem->put($path, $serviceClass);
+        // Generate the service class content with methods and try-catch blocks
+        $namespaceDeclaration = 'App\\Services' . ($namespace ? "\\{$namespace}" : '');
+        $content = <<<EOT
+<?php
 
-        $this->info("Service class {$name} created successfully!");
-    }
+namespace {$namespaceDeclaration};
 
-    /**
-     * Generate the PHP code for a service class based on the given name.
-     *
-     * This method splits the given service name by the '/' delimiter to separate the namespace
-     * and class name. It then generates the appropriate PHP code for the service class, ensuring
-     * that the namespace and class name are correctly formatted. If a directory structure is
-     * specified, it creates the corresponding namespace. Otherwise, it defaults to the root
-     * namespace.
-     *
-     * @param string $name The name of the service, potentially with a namespace structure.
-     *                     Example: 'Auth/SocialLoginService/Dss' or 'SocialLoginService'.
-     *
-     * @return string The generated PHP code for the service class, including the proper namespace
-     *                and class declaration.
-     */
-    private function generateServiceClass($name) {
-        // Split the input string into parts based on '/'
-        $parts = explode('/', $name);
-
-        // Separate the namespace (everything except the last part) and the class name (the last part)
-        $namespaceParts = array_slice($parts, 0, -1); // Get all parts except the last for the namespace
-        $className      = end($parts); // Get the last part as the class name
-
-        // If there are namespace parts, join them with '\' else set it to an empty string
-        $namespace = !empty($namespaceParts) ? '\\' . implode('\\', $namespaceParts) : '';
-
-        return "<?php
-
-namespace App\\Services{$namespace};
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class {$className}
 {
-    // Your service logic goes here
-}
-";
+    protected \$user;
+
+    public function __construct()
+    {
+        \$this->user = Auth::user();
+    }
+    /**
+     * Fetch all resources.
+     *
+     * @return mixed
+     */
+    public function index(\$request)
+    {
+        try {
+            
+        } catch (Exception \$e) {
+         Log::error("{$className}::index" . \$e->getMessage());
+            throw \$e;
+             
+        }
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return void
+     */
+    public function create()
+    {
+        try {
+            
+        } catch (Exception \$e) {
+         Log::error("{$className}::index" . \$e->getMessage());
+            throw \$e;
+        }
+    }
+
+    /**
+     * Store a new resource.
+     *
+     * @param array \$validatedData
+     * @return mixed
+     */
+    public function store(array \$validatedData)
+    {
+        try {
+            
+        } catch (Exception \$e) {
+         Log::error("{$className}::store" . \$e->getMessage());
+            throw \$e;
+        }
+    }
+
+    /**
+     * Display a specific resource.
+     *
+     * @param int \$id
+     * @return mixed
+     */
+    public function show(int \$id)
+    {
+        try {
+            
+        } catch (Exception \$e) {
+         Log::error("{$className}::show" . \$e->getMessage());
+            throw \$e;
+        }
+    }
+
+    /**
+     * Show the form for editing a resource.
+     *
+     * @param int \$id
+     * @return void
+     */
+    public function edit(int \$id)
+    {
+        try {
+           
+        } catch (Exception \$e) {
+         Log::error("{$className}::edit" . \$e->getMessage());
+            throw \$e;
+        }
+    }
+
+    /**
+     * Update a specific resource.
+     *
+     * @param int \$id
+     * @param array \$validatedData
+     * @return mixed
+     */
+    public function update(int \$id, array \$validatedData)
+    {
+        try {
+            
+        } catch (Exception \$e) {
+         Log::error("{$className}::update" . \$e->getMessage());
+            throw \$e;
+        }
+    }
+
+    /**
+     * Delete a specific resource.
+     *
+     * @param int \$id
+     * @return mixed
+     */
+    public function destroy(int \$id)
+    {
+        try {
+            // Logic to delete a specific resource
+        } catch (Exception \$e) {
+         Log::error("{$className}::destroy" . \$e->getMessage());
+            throw \$e;
+        }
+    }
+
+}
+EOT;
+
+        // Create the file
+        File::put($filePath, $content);
+
+        $this->info("Service {$className} created successfully in namespace {$namespaceDeclaration}!");
+        return Command::SUCCESS;
+    }
 }

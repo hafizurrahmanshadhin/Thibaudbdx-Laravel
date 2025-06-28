@@ -2,93 +2,44 @@
 
 namespace App\Models;
 
-use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Message extends Model {
-    use HasFactory, SoftDeletes;
+class Message extends Model
+{
+    use SoftDeletes;
+    protected $fillable = ['sender_id', 'booking_id', 'conversion_id', 'is_restricted','receiver_id', 'content', 'is_read', 'deleted_at', 'status'];
 
-    /**
-     ** The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'sender_id',
-        'receiver_id',
-        'text',
-        'status',
-    ];
-
-    /**
-     *? The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
-        'id'          => 'integer',
-        'sender_id'   => 'integer',
+        'sender_id' => 'integer',
         'receiver_id' => 'integer',
-        'text'        => 'string',
-        'status'      => 'string',
-        'created_at'  => 'datetime',
-        'updated_at'  => 'datetime',
-        'deleted_at'  => 'datetime',
+        'booking_id' => 'integer',
+        'content' => 'string',
+        'is_read' => 'boolean',
+        'deleted_at' => 'datetime',
+        'status' => 'string',
     ];
 
-    /**
-     ** Get the sender of the message.
-     */
-    public function sender(): BelongsTo {
+    public function chatRoom()
+    {
+        return $this->belongsTo(ChatRoom::class);
+    }
+
+    public function sender()
+    {
         return $this->belongsTo(User::class, 'sender_id');
     }
 
-    /**
-     ** Get the receiver of the message.
-     */
-    public function receiver(): BelongsTo {
+    public function receiver()
+    {
         return $this->belongsTo(User::class, 'receiver_id');
     }
-
-    /**
-     *! Scope a query to only include active messages.
-     *
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeActive($query): Builder {
-        return $query->where('status', 'active');
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
     }
-
-    /**
-     *! Scope a query to only include inactive messages.
-     *
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeInactive($query): Builder {
-        return $query->where('status', 'inactive');
-    }
-
-    /**
-     *? Mark the message as inactive.
-     *
-     * @return void
-     */
-    public function deactivate(): void {
-        $this->update(['status' => 'inactive']);
-    }
-
-    /**
-     *? Mark the message as active.
-     *
-     * @return void
-     */
-    public function activate(): void {
-        $this->update(['status' => 'active']);
+    public function rating()
+    {
+        return $this->belongsTo(Rating::class);
     }
 }
