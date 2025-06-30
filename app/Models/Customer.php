@@ -32,7 +32,7 @@ class Customer extends Model
 
 
     //hidden columns
-    protected $hidden = ['user_id', 'deleted_at', 'tag_id', 'created_at', 'updated_at','status'];
+    protected $hidden = ['user_id', 'deleted_at', 'tag_id', 'created_at', 'updated_at', 'status'];
 
     public function getImageAttribute($value): string|null
     {
@@ -77,5 +77,9 @@ class Customer extends Model
     public function voices()
     {
         return $this->hasMany(Voice::class);
+    }
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
     }
 }
