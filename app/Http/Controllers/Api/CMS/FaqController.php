@@ -10,10 +10,14 @@ use Illuminate\Http\Request;
 
 class FaqController extends Controller
 {
-    public function list(Request $request)
+    public function FaqList(Request $request)
     {
         try {
             $faq = FAQ::all();
+
+            if ($faq->isEmpty()) {
+                return response()->json(['status' => true, 'message' => 'No FAQs found', 'data' => [],], 200);
+            }
 
             return response()->json([
                 'status' => true,

@@ -12,14 +12,16 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
-class ServiceController extends Controller {
+class ServiceController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
      * @param Request $request
      * @return View|JsonResponse
      */
-    public function index(Request $request): View | JsonResponse {
+    public function index(Request $request): View | JsonResponse
+    {
         try {
             if ($request->ajax()) {
                 $data = Service::latest()->get();
@@ -63,10 +65,11 @@ class ServiceController extends Controller {
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse {
+    public function store(Request $request): JsonResponse
+    {
         $validator = Validator::make($request->all(), [
-            'services_name' => 'required|string|max:255|unique:services,services_name',
-            'platform_fee'  => 'required|numeric|min:0|max:100',
+            'services_name' => 'required|string|max:400|unique:services,services_name',
+            // 'platform_fee'  => 'required|numeric|min:0|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -76,12 +79,12 @@ class ServiceController extends Controller {
         try {
             Service::create([
                 'services_name' => $request->input('services_name'),
-                'platform_fee'  => $request->input('platform_fee'),
+                // 'platform_fee'  => $request->input('platform_fee'),
             ]);
 
-            return response()->json(['success' => true, 'message' => 'Service package created successfully.']);
+            return response()->json(['success' => true, 'message' => 'Support  created successfully.']);
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => 'An error occurred while creating the service package: ' . $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'An error occurred while creating the Support : ' . $e->getMessage()]);
         }
     }
 
@@ -92,10 +95,11 @@ class ServiceController extends Controller {
      * @param int $id
      * @return JsonResponse
      */
-    public function update(Request $request, int $id): JsonResponse {
+    public function update(Request $request, int $id): JsonResponse
+    {
         $validator = Validator::make($request->all(), [
-            'services_name' => 'required|string|max:255|unique:services,services_name,' . $id,
-            'platform_fee'  => 'required|numeric|min:0|max:100',
+            'services_name' => 'required|string|max:400|unique:services,services_name,' . $id,
+            // 'platform_fee'  => 'required|numeric|min:0|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -107,12 +111,12 @@ class ServiceController extends Controller {
         try {
             $service->update([
                 'services_name' => $request->input('services_name'),
-                'platform_fee'  => $request->input('platform_fee'),
+                // 'platform_fee'  => $request->input('platform_fee'),
             ]);
 
-            return response()->json(['success' => true, 'message' => 'Service package updated successfully.']);
+            return response()->json(['success' => true, 'message' => 'Support  updated successfully.']);
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => 'An error occurred while updating the service package: ' . $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'An error occurred while updating the Support : ' . $e->getMessage()]);
         }
     }
 
@@ -122,7 +126,8 @@ class ServiceController extends Controller {
      * @param int $id
      * @return JsonResponse
      */
-    public function status(int $id): JsonResponse {
+    public function status(int $id): JsonResponse
+    {
         try {
             $service = Service::findOrFail($id);
 
@@ -132,7 +137,7 @@ class ServiceController extends Controller {
 
                 return response()->json([
                     'success' => false,
-                    'message' => 'Service package unpublished successfully.',
+                    'message' => 'Support unpublished successfully.',
                     'data'    => $service,
                 ]);
             } else {
@@ -140,7 +145,7 @@ class ServiceController extends Controller {
                 $service->save();
                 return response()->json([
                     'success' => true,
-                    'message' => 'Service package published successfully.',
+                    'message' => 'Support published successfully.',
                     'data'    => $service,
                 ]);
             }
@@ -157,14 +162,15 @@ class ServiceController extends Controller {
      * @param int $id
      * @return JsonResponse
      */
-    public function destroy(int $id): JsonResponse {
+    public function destroy(int $id): JsonResponse
+    {
         try {
             $service = Service::findOrFail($id);
             $service->delete();
 
             return response()->json([
                 't-success' => true,
-                'message'   => 'Service package deleted successfully.',
+                'message'   => 'Support  deleted successfully.',
             ]);
         } catch (Exception $e) {
             return Helper::jsonResponse(false, 'An error occurred', 500, [

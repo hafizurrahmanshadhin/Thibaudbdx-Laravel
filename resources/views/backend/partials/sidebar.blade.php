@@ -56,12 +56,12 @@
                     </a>
                 </li>
 
-                {{-- Service --}}
+                {{-- Support --}}
                 <li class="nav-item">
                     <a href="{{ route('service.index') }}"
                         class="nav-link menu-link {{ request()->routeIs('service.*') ? 'active' : '' }}">
                         <i class="ri-tools-line"></i>
-                        <span data-key="t-faq">Service</span>
+                        <span data-key="t-faq">Support</span>
                     </a>
                 </li>
 

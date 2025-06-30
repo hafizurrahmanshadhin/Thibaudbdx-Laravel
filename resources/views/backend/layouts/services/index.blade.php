@@ -1,6 +1,6 @@
 @extends('backend.app')
 
-@section('title', 'Services')
+@section('title', 'Support')
 
 @section('content')
     <div class="page-content">
@@ -12,7 +12,7 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{ route('service.index') }}">Table</a></li>
-                                <li class="breadcrumb-item active">Services</li>
+                                <li class="breadcrumb-item active">Support</li>
                             </ol>
                         </div>
                     </div>
@@ -24,9 +24,9 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">All Service List</h5>
+                            <h5 class="card-title mb-0">All Support List</h5>
                             <button type="button" class="btn btn-primary btn-sm" id="addNewService">Add New
-                                Service</button>
+                                Support</button>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -36,8 +36,8 @@
                                     <thead>
                                         <tr>
                                             <th class="column-id">#</th>
-                                            <th class="column-content">Services Name</th>
-                                            <th class="column-content">Platform Fee</th>
+                                            <th class="column-content">Supports Name</th>
+                                            {{-- <th class="column-content">Platform Fee</th> --}}
                                             <th class="column-status">Status</th>
                                             <th class="column-action">Action</th>
                                         </tr>
@@ -67,17 +67,17 @@
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="create_services_name" class="form-label">Services Name:</label>
+                            <label for="create_services_name" class="form-label">Support Name:</label>
                             <input type="text" class="form-control" id="create_services_name" name="services_name"
-                                placeholder="Please Enter Services Name">
+                                placeholder="Please Enter Support Name">
                             <span class="text-danger error-text create_services_name_error"></span>
                         </div>
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label for="create_platform_fee" class="form-label">Platform Fee:</label>
                             <input type="number" class="form-control" id="create_platform_fee" name="platform_fee"
                                 placeholder="Please Enter Platform Fee">
                             <span class="text-danger error-text create_platform_fee_error"></span>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -93,7 +93,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editServiceModalLabel">Edit Service</h5>
+                    <h5 class="modal-title" id="editServiceModalLabel">Edit Support</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="editServiceForm">
@@ -102,17 +102,17 @@
                     <input type="hidden" id="edit_service_id" name="id">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="edit_services_name" class="form-label">Services Name:</label>
+                            <label for="edit_services_name" class="form-label">Support Name:</label>
                             <input type="text" class="form-control" id="edit_services_name" name="services_name"
-                                placeholder="Please Enter Services Name">
+                                placeholder="Please Enter Support Name">
                             <span class="text-danger error-text edit_services_name_error"></span>
                         </div>
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label for="edit_platform_fee" class="form-label">Platform Fee:</label>
                             <input type="number" class="form-control" id="edit_platform_fee" name="platform_fee"
                                 placeholder="Please Enter Platform Fee">
                             <span class="text-danger error-text edit_platform_fee_error"></span>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -174,12 +174,12 @@
                         orderable: true,
                         searchable: true
                     },
-                    {
-                        data: 'platform_fee',
-                        name: 'platform_fee',
-                        orderable: true,
-                        searchable: true
-                    },
+                    // {
+                    //     data: 'platform_fee',
+                    //     name: 'platform_fee',
+                    //     orderable: true,
+                    //     searchable: true
+                    // },
                     {
                         data: 'status',
                         name: 'status',
@@ -241,7 +241,7 @@
                     })
                     .catch(function(error) {
                         console.log(error);
-                        toastr.error('An error occurred while creating the service.');
+                        toastr.error('An error occurred while creating the Support.');
                     });
             });
 
@@ -252,11 +252,11 @@
                 $('#edit_service_id').val(rowData.id);
                 $('#edit_services_name').val(rowData.services_name);
                 // Remove the trailing "%" if present in the platform fee display value.
-                let fee = rowData.platform_fee;
-                if (fee.indexOf('%') !== -1) {
-                    fee = fee.replace('%', '');
-                }
-                $('#edit_platform_fee').val(fee);
+                // let fee = rowData.platform_fee;
+                // if (fee.indexOf('%') !== -1) {
+                //     fee = fee.replace('%', '');
+                // }
+                // $('#edit_platform_fee').val(fee);
                 $('#editServiceModal').modal('show');
             });
 
@@ -284,8 +284,8 @@
                         }
                     })
                     .catch(function(error) {
-                        console.error('Error updating service:', error);
-                        toastr.error('An error occurred while updating the service.');
+                        console.error('Error updating support:', error);
+                        toastr.error('An error occurred while updating the Support.');
                     });
             });
         });

@@ -43,7 +43,6 @@ class CustomerSeeder extends Seeder
                 'image' => '/default/customer/defult_image.png',
                 'longitude' => -73.985130 + ($i * 0.01),
                 'latitude' => 40.748817 + ($i * 0.01),
-                'status' => 'active',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

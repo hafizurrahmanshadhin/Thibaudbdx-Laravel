@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class FAQ extends Model
 {
-    protected $table = 'faqs';
     protected $fillable = ['question', 'answer', 'type', 'status'];
 
     protected $casts = [
@@ -16,4 +15,5 @@ class FAQ extends Model
         'status' => 'string',
     ];
 
+    protected $table = 'f_a_q_s';
 }

@@ -10,12 +10,18 @@ use App\Http\Requests\Api\Auth\PasswordResetRequest;
 use App\Services\Api\Auth\PasswordResetService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
-class PasswordResetController extends Controller {
+class PasswordResetController extends Controller
+{
     private PasswordResetService $passwordResetService;
     private Helper $helper;
 
-    public function __construct(PasswordResetService $passwordResetService, Helper $helper) {
+    public function __construct(PasswordResetService $passwordResetService, Helper $helper)
+    {
         $this->passwordResetService = $passwordResetService;
         $this->helper               = $helper;
     }
@@ -23,7 +29,8 @@ class PasswordResetController extends Controller {
     /**
      * Send OTP code to the user's email.
      */
-    public function sendOtpToEmail(OTPRequest $request): JsonResponse {
+    public function sendOtpToEmail(OTPRequest $request): JsonResponse
+    {
         try {
             $email    = $request->input('email');
             $response = $this->passwordResetService->sendOtpToEmail($email);
@@ -37,7 +44,8 @@ class PasswordResetController extends Controller {
     /**
      * Verify the provided OTP code.
      */
-    public function verifyOTP(OTPVerificationRequest $request): JsonResponse {
+    public function verifyOTP(OTPVerificationRequest $request): JsonResponse
+    {
         try {
             $email    = $request->header('email') ?: $request->input('email');
             $otp      = $request->input('otp');
@@ -55,7 +63,8 @@ class PasswordResetController extends Controller {
     /**
      * Reset the user's password.
      */
-    public function resetPassword(PasswordResetRequest $request): JsonResponse {
+    public function resetPassword(PasswordResetRequest $request): JsonResponse
+    {
         try {
             $email    = $request->header('email') ?: $request->input('email');
             $password = $request->input('password');
@@ -67,6 +76,37 @@ class PasswordResetController extends Controller {
             return $this->helper->jsonResponse(true, $response['message'], 200);
         } catch (Exception $e) {
             return $this->helper->jsonResponse(false, $e->getMessage(), 400);
+        }
+    }
+
+
+    /**
+     * Change the user's password.
+     */
+    //update password
+    public function changePassword(Request $request)
+    {
+        $validatedData = $request->validate([
+            'old_password' => 'required|string',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+        // dd($validatedData);
+        try {
+            $user = auth('api')->user();
+            // dd($user);
+            // Check if the current password matches the stored password
+            if (!\Hash::check($validatedData['old_password'], $user->password)) {
+                return $this->helper->jsonResponse(false, 'Current password is incorrect', 422);
+            }
+
+            // Update the password
+            $user->update([
+                'password' => bcrypt($validatedData['password']),
+            ]);
+            return $this->helper->jsonResponse(true, 'Password updated successfully', 200);
+        } catch (Exception $e) {
+            Log::error('UserController::changePassword' . $e->getMessage());
+            return $this->helper->jsonResponse(false, 'something went wrong', 403);
         }
     }
 }
