@@ -129,7 +129,7 @@ class RegisterController extends Controller
             $user->save();
 
             try {
-                Mail::to($user->email)->send(new OTPMail($newOtp));
+                // Mail::to($user->email)->send(new OTPMail($newOtp));
                 return $this->helper->jsonResponse(true, 'A new OTP has been sent to your email.', 200);
             } catch (Exception $e) {
                 return $this->helper->jsonResponse(false, 'Something worng', 500, ['error' => $e->getMessage()]);

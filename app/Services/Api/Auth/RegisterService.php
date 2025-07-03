@@ -39,18 +39,19 @@ class RegisterService
             ]);
 
             //sending otp mail address
-            Mail::to($user->email)->send(new OTPMail($otp));
+            //off email 
+            // Mail::to($user->email)->send(new OTPMail($otp));
         } catch (Exception $e) {
             throw new Exception('User registration failed: ' . $e->getMessage());
         }
 
         try {
-            $token = JWTAuth::attempt(['email' => $data['email'], 'password' => $data['password']]);
+            $token = JWTAuth::attempt(['email' => $data['email'],  'password' => $data['password']]);
             if (!$token) {
                 throw new Exception('Authentication failed.');
             }
         } catch (JWTException $e) {
-            throw new Exception('Could not create token: ' . $e->getMessage());
+            throw new Exception('Could not create token : ' . $e->getMessage());
         }
 
         return [

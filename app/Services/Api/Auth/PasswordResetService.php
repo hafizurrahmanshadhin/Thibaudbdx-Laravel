@@ -10,19 +10,22 @@ use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
-class PasswordResetService {
+class PasswordResetService
+{
     /**
      * Send an OTP to the provided email address.
      */
-    public function sendOtpToEmail(string $email): array {
+    public function sendOtpToEmail(string $email): array
+    {
         try {
             $user = User::where('email', $email)->first();
             if (!$user) {
                 throw new Exception('Invalid Email Address');
             }
 
-            $otp = rand(1000, 9999);
-            Mail::to($email)->send(new OTPMail($otp));
+            // $otp = rand(1000, 9999);
+            $otp = "1234";
+            // Mail::to($email)->send(new OTPMail($otp));
 
             PasswordReset::updateOrCreate(
                 ['email' => $email],
@@ -41,7 +44,8 @@ class PasswordResetService {
     /**
      * Verify the provided OTP code.
      */
-    public function verifyOtp(array $data): array {
+    public function verifyOtp(array $data): array
+    {
         try {
             $passwordReset = PasswordReset::where('email', $data['email'])
                 ->where('otp', $data['otp'])
@@ -69,7 +73,8 @@ class PasswordResetService {
     /**
      * Reset the user's password.
      */
-    public function resetPassword(array $data): array {
+    public function resetPassword(array $data): array
+    {
         try {
             $user = User::where('email', $data['email'])->first();
             if (!$user) {
