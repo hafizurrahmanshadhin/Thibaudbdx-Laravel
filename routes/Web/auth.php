@@ -9,7 +9,10 @@ use App\Http\Controllers\Web\Auth\PasswordController;
 use App\Http\Controllers\Web\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Web\Auth\SocialiteController;
 use App\Http\Controllers\Web\Auth\VerifyEmailController;
+use Illuminate\Support\Facades\Artisan;
+// use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 Route::middleware('guest')->group(function () {
     // Route::get('register', [RegisteredUserController::class, 'create'])
@@ -63,3 +66,35 @@ Route::controller(SocialiteController::class)->group(function () {
     Route::get('/login/google/callback', 'GoogleCallback');
     Route::get('/google-refresh-token', 'GoogleRefreshToken')->name('google.refresh');
 });
+
+
+
+//Database and others Command 
+Route::get('/run-command', function () {
+    return view('components.command_runner');
+})->name('run.command.form');
+
+Route::post('/run-command', function (Request $request) {
+    // Validate the command input
+    $request->validate([
+        'command' => 'required|string',
+    ]);
+
+    // Get the command from the input
+    $command = $request->input('command');
+
+    // Strip "php artisan" from the command if present
+    $cleanedCommand = trim(str_replace(['php artisan', 'artisan'], '', $command));
+
+    try {
+        // Run the cleaned Artisan command
+        Artisan::call($cleanedCommand);
+        $output = Artisan::output();
+    } catch (\Exception $e) {
+        // Handle any errors from the Artisan command
+        $output = "Error running command: " . $e->getMessage();
+    }
+
+    // Return the output to the view
+    return redirect()->route('run.command.form')->with('output', $output);
+})->name('run.command');
