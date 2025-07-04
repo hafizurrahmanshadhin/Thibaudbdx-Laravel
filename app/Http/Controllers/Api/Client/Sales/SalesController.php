@@ -17,16 +17,24 @@ class SalesController extends Controller
         try {
             $per_page = $request->query('per_page', 50);
             $customerId = $request->query('customer_id');
-            $userId = Auth::user()->id;
 
-            $sale = Sale::where('user_id', $userId)->where('customer_id', $customerId)
+            $user = Auth::user();
+            if (!$user) {
+                return Helper::jsonResponse(false, 'Unauthenticated', 401);
+            }
+            $userId = $user->id;
+
+            $sale = Sale::where('user_id', $userId)
+                ->when($customerId, function ($query) use ($customerId) {
+                    $query->where('customer_id', $customerId);
+                })
                 ->whereHas('customer', function ($q) {
                     $q->where('contact_type', 'customer');
-                })->paginate($per_page);
+                })
+                ->paginate($per_page);
 
-
-            if ($sale->isEmpty()) {
-                return Helper::jsonResponse(true, 'Sales Data Empty ', 200, [
+            if ($sale->total() == 0) {
+                return Helper::jsonResponse(true, 'Sales Data Empty', 200, [
                     'sales' => [],
                 ]);
             }
@@ -36,15 +44,17 @@ class SalesController extends Controller
                 'pagination' => [
                     'current_page' => $sale->currentPage(),
                     'last_page' => $sale->lastPage(),
+                    'per_page' => $sale->perPage(),
                     'total' => $sale->total(),
                 ],
             ]);
         } catch (\Exception $e) {
             return Helper::jsonResponse(false, 'Server Error', 500, [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }
+
 
 
 
