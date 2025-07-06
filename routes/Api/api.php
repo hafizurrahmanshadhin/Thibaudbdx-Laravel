@@ -47,7 +47,7 @@ require "v1/Voice/voice.php";
 require "v1/Task/Task.php";
 require "v1/activity/activity.php";
 require "v1/document/document.php";
-require "v1/sales/sales.php";
+require "v1/Sales/sales.php";
 
 
 //--Client All Route Link
