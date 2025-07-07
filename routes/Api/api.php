@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CMS\ServiceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ContentController;
 use App\Http\Controllers\Api\Customer\CustomerController;
+use App\Http\Controllers\Api\Subscription\StripeController;
 use App\Http\Controllers\Api\Tag\TagController;
 use App\Http\Controllers\Api\User\HomepageController;
 use App\Models\Sale;
@@ -65,4 +66,11 @@ require "CSV/CustomerCSVImport.php";
 Route::middleware('auth.jwt')->group(function () {
     Route::get('/user-list-faq', [FaqController::class, 'FaqList']);
     Route::get('/user-list-support', [ServiceController::class, 'ServiceList']);
+    //stripe 
+    Route::post('/subscriptions/checkout/{plan}', [StripeController::class, 'checkout']);
+    Route::post('/stripe/webhook', [StripeController::class, 'webhook']);
 });
+
+
+Route::post('/subscriptions/{id}/checkout', [StripeController::class, 'checkout'])->middleware('auth.jwt');
+Route::post('/stripe/webhook', [StripeController::class, 'webhook']);

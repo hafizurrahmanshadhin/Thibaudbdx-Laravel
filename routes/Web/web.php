@@ -16,3 +16,15 @@ Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/page/{type}', [PageController::class, 'dynamicPage'])
     ->whereIn('type', ['privacyPolicy', 'termsAndConditions'])
     ->name('dynamicPage.show');
+
+
+// routes/web.php or api.php
+Route::get('/subscription/success', function () {
+    // Show success message or further redirect
+    return response()->json(['message' => 'Payment succeeded and subscription activated']);
+})->name('subscription.success');
+
+Route::get('/subscription/cancel', function () {
+    // Show cancel message
+    return response()->json(['message' => 'Payment cancelled']);
+})->name('subscription.cancel');

@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             TastingSeeder::class,
             DocsSeeder::class,
             SaleSeeder::class,
+            PlanSeeder::class,
         ]);
     }
 }
