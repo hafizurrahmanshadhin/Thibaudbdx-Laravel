@@ -48,6 +48,7 @@ Route::controller(SocialMediaController::class)->group(function () {
     Route::delete('/social-media/{id}', 'destroy')->name('social.delete');
 });
 
+
 //! Route for Dynamic Page Settings
 Route::controller(DynamicPageController::class)->name('settings.')->group(function () {
     Route::get('/dynamic-page', 'index')->name('dynamic_page.index');
