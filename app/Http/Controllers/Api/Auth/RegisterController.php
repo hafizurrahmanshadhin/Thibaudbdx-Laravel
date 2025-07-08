@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
 {
@@ -49,6 +50,12 @@ class RegisterController extends Controller
                     'email' => $result['user']->email,
                 ],
             ], 201);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Validation failed.',
+                'errors'  => $e->errors(),
+            ], 422);
         } catch (JWTException $e) {
             Log::error('JWT Error: ' . $e->getMessage());
             return $this->helper->jsonResponse(false, 'JWT error occurred during registration.', 500, ['error' => $e->getMessage()]);
