@@ -9,6 +9,7 @@ use App\Http\Resources\Api\Auth\LoginResource;
 use App\Services\Api\Auth\LoginService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
@@ -44,14 +45,19 @@ class LoginController extends Controller
                 'token'      => $result['token'],
                 'data'       => new LoginResource($result['user']),
             ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Validation failed.',
+                'errors'  => $e->errors(),
+            ], 422);
         } catch (Exception $e) {
             Log::error('Login Error: ' . $e->getMessage());
             if ($e->getMessage() === 'Unauthorized') {
                 return $this->helper->jsonResponse(false, 'Unauthorized', 401, [
                     'error' => $e->getMessage(),
-                ],401);
+                ], 401);
             }
-
             return $this->helper->jsonResponse(false, 'An error occurred during login.', 500, [
                 'error' => $e->getMessage(),
             ]);
