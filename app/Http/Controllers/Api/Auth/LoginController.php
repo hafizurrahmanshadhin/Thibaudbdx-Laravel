@@ -49,7 +49,7 @@ class LoginController extends Controller
             if ($e->getMessage() === 'Unauthorized') {
                 return $this->helper->jsonResponse(false, 'Unauthorized', 401, [
                     'error' => $e->getMessage(),
-                ]);
+                ],401);
             }
 
             return $this->helper->jsonResponse(false, 'An error occurred during login.', 500, [

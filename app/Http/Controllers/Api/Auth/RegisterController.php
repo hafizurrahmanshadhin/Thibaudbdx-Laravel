@@ -38,14 +38,6 @@ class RegisterController extends Controller
             $data   = $request->validated();
             $result = $this->registerService->register($data);
 
-            // return response()->json([
-            //     'status'     => true,
-            //     'message'    => 'User registered successfully.',
-            //     'code'       => 201,
-            //     'token_type' => 'bearer',
-            //     'token'      => $result['token'],
-            //     'data'       => new RegisterResource($result['user']),
-            // ], 201);
             return response()->json([
                 'status'     => true,
                 'message'    => 'User registered successfully.',
