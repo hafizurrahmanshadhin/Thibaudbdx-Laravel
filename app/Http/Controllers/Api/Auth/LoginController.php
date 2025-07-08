@@ -60,7 +60,7 @@ class LoginController extends Controller
             }
             return $this->helper->jsonResponse(false, 'An error occurred during login.', 500, [
                 'error' => $e->getMessage(),
-            ]);
+            ], 500);
         }
     }
 }
