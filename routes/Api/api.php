@@ -59,7 +59,7 @@ require "v2/Voice/voice.php";
 require "v2/Tasting/Tasting.php";
 require "v2/activity/activity.php";
 require "v2/document/document.php";
-require "v2/sales/sales.php";
+require "v2/Sales/sales.php";
 //csv file upload
 require "CSV/CustomerCSVImport.php";
 
