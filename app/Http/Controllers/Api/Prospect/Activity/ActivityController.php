@@ -13,44 +13,59 @@ use Illuminate\Http\Request;
 
 class ActivityController extends Controller
 {
-    //activity list api  meeting,task,voice,tasting list
+
+    /**
+     * Activity list for a specific 
+     */
     public function ActivityList(Request $request)
     {
         try {
             $customerId = $request->query('customer_id');
 
             $filterCustomer = fn($q) => $q->where('contact_type', 'prospect')->where('user_id', Auth::id());
-
+            // Meetings
             $meetings = Meeting::where('customer_id', $customerId)->where('status', 'active')
                 ->with('customer:id,contact_type,user_id')
                 ->whereHas('customer', $filterCustomer)
-                ->get();
+                ->get()
+                ->map(function ($item) {
+                    $item->type = 'meeting';
+                    return $item;
+                });
 
+            // Tasks
             $tasks = Task::where('customer_id', $customerId)->where('status', 'active')
                 ->with('customer:id,contact_type,user_id')
                 ->whereHas('customer', $filterCustomer)
-                ->get()->makeHidden(['customer']);
+                ->get()
+                ->makeHidden(['customer'])
+                ->map(function ($item) {
+                    $item->type = 'task';
+                    return $item;
+                });
 
+            // Voices
             $voices = Voice::with('customer:id,contact_type,user_id')->where('status', 'active')
-                ->whereHas('customer', function ($q) {
-                    $q->where('contact_type', 'prospect')->where('user_id', Auth::user()->id);
-                })->where('customer_id', $customerId)->get();
+                ->where('customer_id', $customerId)
+                ->get()
+                ->map(function ($item) {
+                    $item->type = 'voice';
+                    return $item;
+                });
 
+            // Tastings
             $tastings = Tasting::where('customer_id', $customerId)->where('status', 'active')
                 ->with('customer:id,contact_type,user_id')
                 ->whereHas('customer', $filterCustomer)
-                ->get();
+                ->get()
+                ->map(function ($item) {
+                    $item->type = 'tasting';
+                    return $item;
+                });
 
-            if ($meetings->isEmpty() && $tasks->isEmpty() && $voices->isEmpty() && $tastings->isEmpty()) {
-                return Helper::jsonResponse(false, 'No activities Found .', 404);
-            }
+            $data = collect()->merge($meetings)->merge($tasks)->merge($voices)->merge($tastings)->sortByDesc('created_at')->values();
 
-            return Helper::jsonResponse(true, 'Activities  retrieved successfully', 200, [
-                'meetings' => $meetings,
-                'tasks' => $tasks,
-                'voices' => $voices,
-                'tastings' => $tastings,
-            ]);
+            return Helper::jsonResponse(true, 'Activities retrieved successfully', 200, $data);
         } catch (\Exception $e) {
             return Helper::jsonResponse(false, 'Server Error', 500, [
                 'error' => $e->getMessage()

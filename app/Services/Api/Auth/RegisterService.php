@@ -25,8 +25,8 @@ class RegisterService
 
         try {
             // DB::beginTransaction();
-            // $otp = rand(1000, 9999);
-            $otp = "1234";
+            $otp = rand(1000, 9999);
+            // $otp = "1234";
             $otpExpiresAt = Carbon::now()->addMinutes(60); // 1 hour
             $user = User::create([
                 // 'first_name' => $data['first_name'],
@@ -39,8 +39,7 @@ class RegisterService
             ]);
 
             //sending otp mail address
-            //off email 
-            // Mail::to($user->email)->send(new OTPMail($otp));
+            Mail::to($user->email)->send(new OTPMail($otp, $user->name, $user->email));
         } catch (Exception $e) {
             throw new Exception('User registration failed: ' . $e->getMessage());
         }

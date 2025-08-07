@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('meetings', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('description')->nullable();
+            $table->string('location')->nullable();
             $table->date('date')->nullable();
             $table->time('time')->nullable();
             $table->boolean('reminder')->default(false);

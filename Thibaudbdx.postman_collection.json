@@ -1,0 +1,7537 @@
+{
+	"info": {
+		"_postman_id": "618fc991-750a-48a9-acb0-20deb885543a",
+		"name": "Thibaudbdx",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32086283",
+		"_collection_link": "https://www.postman.com/shadhinworkspace/workspace/thibaudbdx/collection/32086283-618fc991-750a-48a9-acb0-20deb885543a?action=share&source=collection_link&creator=32086283"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData;\r",
+									"\r",
+									"try {\r",
+									"    jsonData = pm.response.json();\r",
+									"} catch (e) {\r",
+									"    console.error('JSON parsing error: ', e);\r",
+									"}\r",
+									"\r",
+									"if (jsonData && jsonData.token) {\r",
+									"    pm.globals.set('token', jsonData.token);\r",
+									"    console.log('Token set globally: ' + jsonData.token);\r",
+									"} else {\r",
+									"    console.error('Token not found in the response');\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const firstNames = [\"John\", \"Jane\", \"Michael\", \"Emily\", \"David\", \"Sarah\", \"Robert\", \"Jessica\", \"Daniel\", \"Laura\"];\r",
+									"const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];\r",
+									"\r",
+									"const lastNames = [\"Smith\", \"Johnson\", \"Williams\", \"Brown\", \"Jones\", \"Miller\", \"Davis\", \"Garcia\", \"Rodriguez\", \"Martinez\"];\r",
+									"const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];\r",
+									"\r",
+									"const domains = [\"example.com\", \"test.com\", \"email.com\", \"demo.com\", \"gmail.com\", \"yahoo.com\", \"hotmail.com\", \"outlook.com\"];\r",
+									"const randomNumber = Math.floor(Math.random() * 1000);\r",
+									"const randomDomain = domains[Math.floor(Math.random() * domains.length)];\r",
+									"const email = `${firstName.toLowerCase()}${randomNumber}@${randomDomain}`;\r",
+									"\r",
+									"pm.globals.set(\"first_name\", firstName);\r",
+									"pm.globals.set(\"last_name\", lastName);\r",
+									"pm.globals.set(\"email\", email);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "toams",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "mdtomasuddin1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "password",
+									"value": "11111111",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "essa@gmail.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "mdtomasuddin1@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify-email",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"if (jsonData && jsonData.token) {\r",
+									"    pm.globals.set('token', jsonData.token);\r",
+									"    console.log('Token set globally: ' + jsonData.token);\r",
+									"} else {\r",
+									"    console.error('Token not found in the response');\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{vault:authorization-secret}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "mdtomasuddin1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "otp",
+									"value": "1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/verify-email",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"verify-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "resend-otp",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"if (jsonData && jsonData.token) {\r",
+									"    pm.globals.set('token', jsonData.token);\r",
+									"    console.log('Token set globally: ' + jsonData.token);\r",
+									"} else {\r",
+									"    console.error('Token not found in the response');\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "ggg@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/resend-otp",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"resend-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forget-password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "tomg@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/forget-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"forget-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify_OTP",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "mdtomasuddin1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "otp",
+									"value": "1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/verify-otp",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"verify-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset_Password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "mdtomasuddin1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/reset-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User-update-password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{vault:authorization-secret}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "old_password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/update-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"update-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user update-profile",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{vault:authorization-secret}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "toms",
+									"type": "text"
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/C:/Users/Tomas/Downloads/notification.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/update-profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"update-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Socialite_Login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "provider",
+									"value": "apple",
+									"description": "this provider is for apple login",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "token",
+									"value": "{{vault:json-web-token}}",
+									"description": "this token is for apple login",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "provider",
+									"value": "google",
+									"description": "this provider is for google login",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "4%2F0AVMBsJinuL5or5R9cY9Q4urjDK7wqU3uHY7DyuUu1pzQSDymKGu_WrRvrs_4vdUa9hjuBg",
+									"description": "this token is for google login",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "token",
+									"value": "ya29.a0AS3H6Ny4gFjY905mpGxVTCo2Z2rHS7H27wocqMfM41JJgE7VGoha47UI1l0ogzvSrFyW7HaYeEL8FddeZxvQfS7Os_dqOAD6r6V-7gIrOBjIi-YkKdr5m601R7jKTYlpWxctQ_uBa5ICjzht9X0MCvfe7n0ZNWe3Yu287DczaCgYKATQSARYSFQHGX2MiPFzIx_mFGWguHNvkyr8IGQ0175",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/socialite-login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"socialite-login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{vault:authorization-secret}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/user-info",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"user-info"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "HomePage",
+			"item": [
+				{
+					"name": "Task Upcomming",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/upcomming-task",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"upcomming-task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Meeting Upcomming",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/upcommig-meeting",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"upcommig-meeting"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upcoming Tasting list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/upcoming-tasting",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"upcoming-tasting"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contact ADD",
+			"item": [
+				{
+					"name": "Import from CSV",
+					"item": [
+						{
+							"name": "Import form CSV",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "csv_file",
+											"type": "file",
+											"src": "/D:/tomasd (2).csv"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/import-customers",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"import-customers"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Import form Contact",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "contact_type",
+									"value": "customer",
+									"description": "prospect,customer,inactive and  ",
+									"type": "text"
+								},
+								{
+									"key": "company_name",
+									"value": "wine limitg",
+									"type": "text"
+								},
+								{
+									"key": "owner_name",
+									"value": "ddd",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Mirpur",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Dhaka",
+									"type": "text"
+								},
+								{
+									"key": "zip_code",
+									"value": "1216",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "01700000080",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "qqqqq@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "website",
+									"value": "https://client.com",
+									"type": "text"
+								},
+								{
+									"key": "tag_id[]0",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Valuable long-term client.",
+									"type": "text"
+								},
+								{
+									"key": "latitude",
+									"value": "23.8103",
+									"type": "text"
+								},
+								{
+									"key": "longitude",
+									"value": "90.3912",
+									"type": "text"
+								},
+								{
+									"key": "tag_id[1]",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "tag_id[2]",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/import-form-contact",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"import-form-contact"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Import form Google",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "contact_type",
+									"value": "prospect",
+									"description": "prospect,customer,inactive defult(prospect)",
+									"type": "text"
+								},
+								{
+									"key": "company_name",
+									"value": "wine limitg",
+									"type": "text"
+								},
+								{
+									"key": "owner_name",
+									"value": "ddd",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Mirpur",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Dhaka",
+									"type": "text"
+								},
+								{
+									"key": "zip_code",
+									"value": "1216",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "01700000007",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "xs@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "website",
+									"value": "https://client.com",
+									"type": "text"
+								},
+								{
+									"key": "tag_id[]0",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Valuable long-term client.",
+									"type": "text"
+								},
+								{
+									"key": "latitude",
+									"value": "23.8103",
+									"type": "text"
+								},
+								{
+									"key": "longitude",
+									"value": "90.3912",
+									"type": "text"
+								},
+								{
+									"key": "tag_id[1]",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "tag_id[2]",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/import-form-google",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"import-form-google"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Import form Scan a Business Card",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "contact_type",
+									"value": "prospect",
+									"description": "prospect,customer,inactive defult(prospect)",
+									"type": "text"
+								},
+								{
+									"key": "company_name",
+									"value": "wine limitg",
+									"type": "text"
+								},
+								{
+									"key": "owner_name",
+									"value": "ddd",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Mirpur",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Dhaka",
+									"type": "text"
+								},
+								{
+									"key": "zip_code",
+									"value": "1216",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "01700000000",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "x@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "website",
+									"value": "https://client.com",
+									"type": "text"
+								},
+								{
+									"key": "tag_id[]0",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Valuable long-term client.",
+									"type": "text"
+								},
+								{
+									"key": "latitude",
+									"value": "23.8103",
+									"type": "text"
+								},
+								{
+									"key": "longitude",
+									"value": "90.3912",
+									"type": "text"
+								},
+								{
+									"key": "tag_id[1]",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "tag_id[2]",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/import-form-card",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"import-form-card"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tag",
+			"item": [
+				{
+					"name": "Tag-list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/tag-list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tag-list"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "to",
+									"description": "search  tag name wish ",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "1",
+									"description": "per page show tag",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tag-create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "restruentsf",
+									"type": "text"
+								},
+								{
+									"key": "color",
+									"value": "#FF5734",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/tag-create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tag-create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tag-details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/tag-details/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tag-details",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tag-update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "tagssssss",
+									"type": "text"
+								},
+								{
+									"key": "color",
+									"value": "#FF5734",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/tag-update/5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tag-update",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tag-delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/tag-destroy/5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tag-destroy",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "product-list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/product-list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product-list"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "3",
+									"description": "paginatation per page ",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product-create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "wine_name",
+									"value": "first wineadef",
+									"type": "text"
+								},
+								{
+									"key": "cuvee",
+									"value": "2015",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "AOC",
+									"type": "text"
+								},
+								{
+									"key": "color",
+									"value": "red",
+									"type": "text"
+								},
+								{
+									"key": "soil_type",
+									"value": "clay",
+									"type": "text"
+								},
+								{
+									"key": "harvest_ageing",
+									"value": "Aged in French oak barrels",
+									"type": "text"
+								},
+								{
+									"key": "food",
+									"value": "Pairs well with red meat",
+									"type": "text"
+								},
+								{
+									"key": "tasting_notes",
+									"value": "Rich and full-bodied",
+									"type": "text"
+								},
+								{
+									"key": "awards",
+									"value": "\tGold Medal in Wine Awards",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [
+										"postman-cloud:///1f03606c-ce44-4120-8f6a-17144c3c4ae8",
+										"/C:/Users/HP/Downloads/photo_2025-06-19_22-58-13.jpg"
+									]
+								},
+								{
+									"key": "company_name",
+									"value": "Margaux Estates",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Bordeaux, France",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "+33 123456789",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "a@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "website",
+									"value": "https://chateaumargaux.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/product-create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product-create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product-details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/product-details/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product-details",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product-update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "wine_name",
+									"value": "first wine",
+									"type": "text"
+								},
+								{
+									"key": "cuvee",
+									"value": "2015",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "AOC",
+									"type": "text"
+								},
+								{
+									"key": "color",
+									"value": "red",
+									"type": "text"
+								},
+								{
+									"key": "soil_type",
+									"value": "clay",
+									"type": "text"
+								},
+								{
+									"key": "harvest_ageing",
+									"value": "Aged in French oak barrels",
+									"type": "text"
+								},
+								{
+									"key": "food",
+									"value": "Pairs well with red meat",
+									"type": "text"
+								},
+								{
+									"key": "tasting_notes",
+									"value": "Rich and full-bodied",
+									"type": "text"
+								},
+								{
+									"key": "awards",
+									"value": "\tGold Medal in Wine Awards",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/HP/Downloads/photo_2025-06-19_22-58-13.jpg"
+								},
+								{
+									"key": "company_name",
+									"value": "Margaux Estates",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Bordeaux, France",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "+33 123456789",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "a@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "website",
+									"value": "https://chateaumargaux.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/product-update/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product-update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product-delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/product-destroy/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product-destroy",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pdf",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/product-pdf-generate/7",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product-pdf-generate",
+								"7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "prospect Contact",
+			"item": [
+				{
+					"name": "Customer",
+					"item": [
+						{
+							"name": "customer list",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/customer-list",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"customer-list"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "Mymensingh",
+											"description": "search for => owner_name ,company_name ,phone,address",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "2",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Customer-create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "contact_type",
+											"value": "prospect",
+											"description": "prospect,customer,inactive",
+											"type": "text"
+										},
+										{
+											"key": "company_name",
+											"value": "wine limitg",
+											"type": "text"
+										},
+										{
+											"key": "owner_name",
+											"value": "ddd",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "Mirpur",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Dhaka",
+											"type": "text"
+										},
+										{
+											"key": "zip_code",
+											"value": "1216",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "01700000000",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "x@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "website",
+											"value": "https://client.com",
+											"type": "text"
+										},
+										{
+											"key": "tag_id[]0",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Valuable long-term client.",
+											"type": "text"
+										},
+										{
+											"key": "latitude",
+											"value": "23.8103",
+											"type": "text"
+										},
+										{
+											"key": "longitude",
+											"value": "90.3912",
+											"type": "text"
+										},
+										{
+											"key": "tag_id[1]",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "tag_id[2]",
+											"value": "4",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/customer-create",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"customer-create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Customer-details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/customer-details/4",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"customer-details",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Customer-update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "contact_type",
+											"value": "prospect",
+											"description": "prospect,customer,inactive",
+											"type": "text"
+										},
+										{
+											"key": "company_name",
+											"value": "wine limit",
+											"type": "text"
+										},
+										{
+											"key": "owner_name",
+											"value": "tomas",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "Mirpurq",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Dhaka",
+											"type": "text"
+										},
+										{
+											"key": "zip_code",
+											"value": "1216",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "01700000000",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "w@gmail.comyqq",
+											"type": "text"
+										},
+										{
+											"key": "website",
+											"value": "https://client.com",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Valuable long-term client.q",
+											"type": "text"
+										},
+										{
+											"key": "latitude",
+											"value": "23.8103",
+											"type": "text"
+										},
+										{
+											"key": "longitude",
+											"value": "90.3912",
+											"type": "text"
+										},
+										{
+											"key": "tag_id[0]",
+											"value": "2",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "tag_id[1]",
+											"value": "3",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "tag_id[2]",
+											"value": "4",
+											"type": "text"
+										},
+										{
+											"key": "tag_id[3]",
+											"value": "5",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/customer-update/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"customer-update",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Customer-delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/customer-destroy/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"customer-destroy",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Contact",
+					"item": [
+						{
+							"name": "Meeting",
+							"item": [
+								{
+									"name": "Meeting-list",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/meeting-list?customer_id=1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"meeting-list"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1"
+												},
+												{
+													"key": "search",
+													"value": "",
+													"description": "name ",
+													"disabled": true
+												},
+												{
+													"key": "per_page",
+													"value": "1",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "meeting-create",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "meet",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "meeting discuss the upcomming project",
+													"type": "text"
+												},
+												{
+													"key": "location",
+													"value": "dhaka",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-07-30",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "15:00",
+													"type": "text"
+												},
+												{
+													"key": "reminder",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "reminder_time",
+													"value": "5",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/meeting-create",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"meeting-create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "meeting-details",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/meeting-details/5?customer_id=1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"meeting-details",
+												"5"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "meeting-update",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "name",
+													"value": "meeting with tomee",
+													"type": "text"
+												},
+												{
+													"key": "customer_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "lorem1289",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-07-30",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "15:00",
+													"type": "text"
+												},
+												{
+													"key": "reminder",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "reminder_time",
+													"value": "5",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/meeting-update/4",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"meeting-update",
+												"4"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "meeting-delete",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/meeting-destroy/3?customer_id=1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"meeting-destroy",
+												"3"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Task",
+							"item": [
+								{
+									"name": "task-list",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/task-list?customer_id=16",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"task-list"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "16"
+												},
+												{
+													"key": "search",
+													"value": "Task 2",
+													"description": "name",
+													"disabled": true
+												},
+												{
+													"key": "per_page",
+													"value": "2",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "task-create",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "Task1",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "Task discuss the upcomming project",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-07-28",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "12:00",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/task-create",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"task-create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "task-details",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/task-details/14?customer_id=1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"task-details",
+												"14"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "task-update",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "meeting with tom",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "lorem1289",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "12:00",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-07-30",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/task-update/15",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"task-update",
+												"15"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "task-delete",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/task-destroy/1?customer_id=1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"task-destroy",
+												"1"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Notes",
+							"item": [
+								{
+									"name": "Text-notes",
+									"item": [
+										{
+											"name": "text-notes-create",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "customer_id",
+															"value": "1",
+															"type": "text"
+														},
+														{
+															"key": "name",
+															"value": "Task1",
+															"type": "text"
+														},
+														{
+															"key": "description",
+															"value": "Task discuss the upcomming project",
+															"type": "text"
+														},
+														{
+															"key": "date",
+															"value": "2025-07-28",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{base_url}}/prospect-notes-create",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"prospect-notes-create"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "text-notes-details",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{base_url}}/prospect-notes-details/1?customer_id=1",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"prospect-notes-details",
+														"1"
+													],
+													"query": [
+														{
+															"key": "customer_id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "text notes update",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/ecmascript",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "customer_id",
+															"value": "1",
+															"type": "text"
+														},
+														{
+															"key": "name",
+															"value": "meeting with tom",
+															"type": "text"
+														},
+														{
+															"key": "description",
+															"value": "lorem1289",
+															"type": "text"
+														},
+														{
+															"key": "date",
+															"value": "2025-07-30",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{base_url}}/prospect-notes-update/2",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"prospect-notes-update",
+														"2"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "text-note-delete",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{base_url}}/prospect-notes-destroy/3?customer_id=1",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"prospect-notes-destroy",
+														"3"
+													],
+													"query": [
+														{
+															"key": "customer_id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Voice",
+									"item": [
+										{
+											"name": "Voice-create",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "customer_id",
+															"value": "1",
+															"type": "text"
+														},
+														{
+															"key": "title",
+															"value": "My First Voice x",
+															"type": "text"
+														},
+														{
+															"key": "description",
+															"value": "This is a short test voice file.",
+															"type": "text"
+														},
+														{
+															"key": "duration",
+															"value": "60",
+															"type": "text"
+														},
+														{
+															"key": "voice_file",
+															"type": "file",
+															"src": "/C:/Users/Tomas/Downloads/the-minstrels-lament-medieval-tavern-song-377751.mp3"
+														},
+														{
+															"key": "date",
+															"value": "2025-07-30",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{base_url}}/voice-create",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"voice-create"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "voice-details",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{base_url}}/voice-details/1?customer_id=1",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"voice-details",
+														"1"
+													],
+													"query": [
+														{
+															"key": "customer_id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Voice-update",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "customer_id",
+															"value": "1",
+															"type": "text"
+														},
+														{
+															"key": "title",
+															"value": "My First Voice Note11q1",
+															"type": "text"
+														},
+														{
+															"key": "description",
+															"value": "This is a short test voice file.",
+															"type": "text"
+														},
+														{
+															"key": "duration",
+															"value": "600",
+															"type": "text"
+														},
+														{
+															"key": "voice_file",
+															"type": "file",
+															"src": "/C:/Users/HP/Downloads/audio2.mp3"
+														},
+														{
+															"key": "date`",
+															"value": "2025-07-30",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{base_url}}/voice-update/16",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"voice-update",
+														"16"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "voice-delete",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "{{base_url}}/voice-destroy/1?customer_id=1",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"voice-destroy",
+														"1"
+													],
+													"query": [
+														{
+															"key": "customer_id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Note List",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/prospect-notes-list?customer_id=11",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"prospect-notes-list"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "11"
+												},
+												{
+													"key": "search",
+													"value": "Task 2",
+													"description": "name",
+													"disabled": true
+												},
+												{
+													"key": "per_page",
+													"value": "2",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Tasting",
+							"item": [
+								{
+									"name": "tasting-list",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/tasting-list/?customer_id=1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tasting-list",
+												""
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1"
+												},
+												{
+													"key": "per_page",
+													"value": "4",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "tasting-create",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "Tastingedfwfs",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-07-24",
+													"description": "format('Y-m-d'),",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "05:00",
+													"description": "time format = H:i",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": " alcoholic drink made from fermented fruit. Yeast consumes the sugar in the fruit and converts it to ethanol and carbon dio",
+													"type": "text"
+												},
+												{
+													"key": "product_id[0]",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "product_id[1]",
+													"value": "2",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/tasting-create",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tasting-create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "task-details",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/tasting-details/1?customer_id=1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tasting-details",
+												"1"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "tasting-update",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "a",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "sdafsgrsgssghg",
+													"type": "text"
+												},
+												{
+													"key": "product_id[0]",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "product_id[1]",
+													"value": "4",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-07-24",
+													"description": "format('Y-m-d'),",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "05:00",
+													"description": "time format = H:i",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/tasting-update/2",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tasting-update",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Tasting Delete",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/tasting-destroy/1?customer_id=1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tasting-destroy",
+												"1"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Activity",
+					"item": [
+						{
+							"name": "activity-list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{base_url}}/activity-list?customer_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"activity-list"
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Docs",
+					"item": [
+						{
+							"name": "document-list",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/document-list/?customer_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"document-list",
+										""
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "1"
+										},
+										{
+											"key": "per_page",
+											"value": "4",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "document-create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "customer_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "file[]",
+											"type": "file",
+											"src": "/C:/Users/Tomas/Downloads/download.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/document-create",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"document-create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "document-details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/document-details/5?customer_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"document-details",
+										"5"
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "document Delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/document-destroy/2?customer_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"document-destroy",
+										"2"
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Sales",
+					"item": [
+						{
+							"name": "prospect-sales-list",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/prospect-sales-list?customer_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"prospect-sales-list"
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "1"
+										},
+										{
+											"key": "per_page",
+											"value": "2",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "prospect sales create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "customer_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "100.00",
+											"type": "text"
+										},
+										{
+											"key": "date",
+											"value": "2025-06-28",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "",
+											"description": "pending,completed,cancelled",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/prospect-sales-create",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"prospect-sales-create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "prospect sales details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/prospect-sales-details/4?customer_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"prospect-sales-details",
+										"4"
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "prospect sales update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "customer_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "100.00",
+											"type": "text"
+										},
+										{
+											"key": "date",
+											"value": "2025-07-28",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "completed",
+											"description": "pending,completed,cancelled",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/prospect-sales-update/4",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"prospect-sales-update",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "prospect sales delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/prospect-sales-destroy/2?customer_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"prospect-sales-destroy",
+										"2"
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Client Contact",
+			"item": [
+				{
+					"name": "Customer",
+					"item": [
+						{
+							"name": "customer list",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/client-customer-list",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-customer-list"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "",
+											"description": "search for => owner_name ,company_name ,phone,address",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "2",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Customer-create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "contact_type",
+											"value": "customer",
+											"description": "customer",
+											"type": "text"
+										},
+										{
+											"key": "company_name",
+											"value": "Software Ltd....",
+											"type": "text"
+										},
+										{
+											"key": "owner_name",
+											"value": "ddd",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "Mirpur",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Dhaka",
+											"type": "text"
+										},
+										{
+											"key": "zip_code",
+											"value": "1216",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "01700000000",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "tosmas@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "website",
+											"value": "https://client.com",
+											"type": "text"
+										},
+										{
+											"key": "tag_id[]0",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Valuable long-term client.",
+											"type": "text"
+										},
+										{
+											"key": "latitude",
+											"value": "23.8103",
+											"type": "text"
+										},
+										{
+											"key": "longitude",
+											"value": "90.3912",
+											"type": "text"
+										},
+										{
+											"key": "tag_id[1]",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "tag_id[2]",
+											"value": "4",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/client-customer-create",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-customer-create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Customer-details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/client-customer-details/8",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-customer-details",
+										"8"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Customer-update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "contact_type",
+											"value": "customer",
+											"description": "customer,prospect",
+											"type": "text"
+										},
+										{
+											"key": "company_name",
+											"value": "Software Ltd....qqq",
+											"type": "text"
+										},
+										{
+											"key": "owner_name",
+											"value": "tomas",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "Mirpurq",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Dhaka",
+											"type": "text"
+										},
+										{
+											"key": "zip_code",
+											"value": "1216",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "01700000000",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "w@gmail.comyqq",
+											"type": "text"
+										},
+										{
+											"key": "website",
+											"value": "https://client.com",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Valuable long-term client.q",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "postman-cloud:///1f03606c-ce44-4120-8f6a-17144c3c4ae8"
+										},
+										{
+											"key": "latitude",
+											"value": "23.8103",
+											"type": "text"
+										},
+										{
+											"key": "longitude",
+											"value": "90.3912",
+											"type": "text"
+										},
+										{
+											"key": "tag_id[0]",
+											"value": "2",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "tag_id[1]",
+											"value": "3",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "tag_id[2]",
+											"value": "4",
+											"type": "text"
+										},
+										{
+											"key": "tag_id[3]",
+											"value": "5",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/client-customer-update/8",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-customer-update",
+										"8"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Customer-delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/client-customer-destroy/6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-customer-destroy",
+										"6"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Contact",
+					"item": [
+						{
+							"name": "Meeting",
+							"item": [
+								{
+									"name": "Meeting-list",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/client-meeting-list/?customer_id=",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-meeting-list",
+												""
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": ""
+												},
+												{
+													"key": "search",
+													"value": "Athena Grant",
+													"description": "name ",
+													"disabled": true
+												},
+												{
+													"key": "per_page",
+													"value": "2",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "meeting-create",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"customer_id\": 9,\r\n  \"name\": \"meet\",\r\n  \"description\": \"meeting discuss the upcomming project\",\r\n  \"date\": \"2025-07-25\",\r\n  \"time\": \"15:00\",\r\n  \"reminder\": true,\r\n  \"reminder_time\": 1,\r\n  \"location\": \"dhaka\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/client-meeting-create",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-meeting-create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "meeting-details",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/client-meeting-details/8?customer_id=6",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-meeting-details",
+												"8"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "6"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "meeting-update",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "6",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "meeting with tomas",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "lorem1289",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-06-30",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "15:00",
+													"type": "text"
+												},
+												{
+													"key": "reminder",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "reminder_time",
+													"value": "5",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/client-meeting-update/7",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-meeting-update",
+												"7"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "8",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "meeting-delete",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/client-meeting-destroy/6?customer_id=6",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-meeting-destroy",
+												"6"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "6"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Task",
+							"item": [
+								{
+									"name": "task-list",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/client-task-list/?customer_id=6",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-task-list",
+												""
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "6"
+												},
+												{
+													"key": "search",
+													"value": "da",
+													"description": "name ",
+													"disabled": true
+												},
+												{
+													"key": "per_page",
+													"value": "2",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "task-create",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "6",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "Task1",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "Task discuss the upcomming project",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-08-27",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "12:00",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/client-task-create",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-task-create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "task-details",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/client-task-details/6?customer_id=6",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-task-details",
+												"6"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "6"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "task-update",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "6",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "meeting with tom",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "lorem1289",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-07-30",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "12:00",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/client-task-update/17",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-task-update",
+												"17"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "task-delete",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/client-task-destroy/6?customer_id=6",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-task-destroy",
+												"6"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "6"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Notes",
+							"item": [
+								{
+									"name": "Text-notes Client",
+									"item": [
+										{
+											"name": "text-notes-create",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "customer_id",
+															"value": "1",
+															"type": "text"
+														},
+														{
+															"key": "name",
+															"value": "Task1",
+															"type": "text"
+														},
+														{
+															"key": "description",
+															"value": "Task discuss the upcomming project",
+															"type": "text"
+														},
+														{
+															"key": "date",
+															"value": "2025-07-28",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{base_url}}/client-notes-create",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"client-notes-create"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "text-notes-details",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{base_url}}/client-notes-details/1?customer_id=1",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"client-notes-details",
+														"1"
+													],
+													"query": [
+														{
+															"key": "customer_id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "text notes update",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/ecmascript",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "customer_id",
+															"value": "1",
+															"type": "text"
+														},
+														{
+															"key": "name",
+															"value": "meeting with tom",
+															"type": "text"
+														},
+														{
+															"key": "description",
+															"value": "lorem1289",
+															"type": "text"
+														},
+														{
+															"key": "date",
+															"value": "2025-07-30",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{base_url}}/client-notes-update/1",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"client-notes-update",
+														"1"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "text-note-delete",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{base_url}}/client-notes-destroy/1?customer_id=1",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"client-notes-destroy",
+														"1"
+													],
+													"query": [
+														{
+															"key": "customer_id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Voice",
+									"item": [
+										{
+											"name": "client-Voice-create",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "customer_id",
+															"value": "9",
+															"type": "text"
+														},
+														{
+															"key": "title",
+															"value": "My First Voice Note11q",
+															"type": "text"
+														},
+														{
+															"key": "description",
+															"value": "This is a short test voice file.",
+															"type": "text"
+														},
+														{
+															"key": "duration",
+															"value": "60",
+															"type": "text"
+														},
+														{
+															"key": "voice_file",
+															"type": "file",
+															"src": "/C:/Users/HP/Downloads/audio4.mp3"
+														},
+														{
+															"key": "date",
+															"value": "2025-08-30",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{base_url}}/client-voice-create",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"client-voice-create"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "client-voice-details",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{base_url}}/client-voice-details/6?customer_id=6",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"client-voice-details",
+														"6"
+													],
+													"query": [
+														{
+															"key": "customer_id",
+															"value": "6"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "client-Voice-update",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "customer_id",
+															"value": "6",
+															"type": "text"
+														},
+														{
+															"key": "title",
+															"value": "My First Voice Note11q1",
+															"type": "text"
+														},
+														{
+															"key": "description",
+															"value": "This is a short test voice file.",
+															"type": "text"
+														},
+														{
+															"key": "duration",
+															"value": "600",
+															"type": "text"
+														},
+														{
+															"key": "voice_file",
+															"type": "file",
+															"src": "/C:/Users/HP/Downloads/audio2.mp3"
+														},
+														{
+															"key": "date",
+															"value": "2025-08-30",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{base_url}}/client-voice-update/6",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"client-voice-update",
+														"6"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "client-voice-delete",
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{token}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{base_url}}/client-voice-destroy/6?customer_id=9",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"client-voice-destroy",
+														"6"
+													],
+													"query": [
+														{
+															"key": "customer_id",
+															"value": "9"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Notes List",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/client-notes-list?customer_id=1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-notes-list"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1"
+												},
+												{
+													"key": "search",
+													"value": "Task 2",
+													"description": "name",
+													"disabled": true
+												},
+												{
+													"key": "per_page",
+													"value": "2",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Tasting",
+							"item": [
+								{
+									"name": "client-tasting-list",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/client-tasting-list/?customer_id=6&per_page=4",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-tasting-list",
+												""
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "6"
+												},
+												{
+													"key": "per_page",
+													"value": "4"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "client-tasting-create",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "6",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "Tastingedfwfs6",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": " alcoholic drink made from fermented fruit. Yeast consumes the sugar in the fruit and converts it to ethanol and carbon dio",
+													"type": "text"
+												},
+												{
+													"key": "product_id[0]",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "product_id[1]",
+													"value": "2",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-07-24",
+													"description": "format('Y-m-d'),",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "05:00",
+													"description": "time format = H:i",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/client-tasting-create",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-tasting-create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "client-task-details",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/client-tasting-details/6?customer_id=6",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-tasting-details",
+												"6"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "6"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "client-tasting-update",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "6",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "a",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": " alcoholic drink made from fermented fruit. Yeast consumes the sugar in the fruit and converts it to ethanol and carbon dio",
+													"type": "text"
+												},
+												{
+													"key": "product_id[0]",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "product_id[1]",
+													"value": "3",
+													"type": "text"
+												},
+												{
+													"key": "date",
+													"value": "2025-07-24",
+													"description": "format('Y-m-d'),",
+													"type": "text"
+												},
+												{
+													"key": "time",
+													"value": "05:00",
+													"description": "time format = H:i",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/client-tasting-update/6",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-tasting-update",
+												"6"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "client-Tasting Delete",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/client-tasting-destroy/6?customer_id=6",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"client-tasting-destroy",
+												"6"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "6"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Docs",
+							"item": [
+								{
+									"name": "document-list",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/document-list/?customer_id=1&per_page=4",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"document-list",
+												""
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1"
+												},
+												{
+													"key": "per_page",
+													"value": "4"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "document-create",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "file[]",
+													"type": "file",
+													"src": "/C:/Users/Tomas/Downloads/4_1753767426.pdf"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/document-create",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"document-create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "document-details",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/document-details/5?customer_id=1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"document-details",
+												"5"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "document Delete",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/document-destroy/1?customer_id=1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"document-destroy",
+												"1"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Activity",
+					"item": [
+						{
+							"name": "activity-list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{base_url}}/client-activity-list?customer_id=6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-activity-list"
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "6"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Docs",
+					"item": [
+						{
+							"name": "client-document-list",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user-docs-list",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user-docs-list"
+									],
+									"query": [
+										{
+											"key": "per_page",
+											"value": "4",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "client-document-create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "customer_id",
+											"value": "6",
+											"type": "text"
+										},
+										{
+											"key": "file[]",
+											"type": "file",
+											"src": "/C:/Users/Tomas/Downloads/download (2).jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/client-document-create",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-document-create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "client-document-details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/client-document-details/6?customer_id=6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-document-details",
+										"6"
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "6"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "client-document Delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/client-document-destroy/6?customer_id=6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-document-destroy",
+										"6"
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "6"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Sales",
+					"item": [
+						{
+							"name": "client-sales-list",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/client-sales-list?customer_id=6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-sales-list"
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "6"
+										},
+										{
+											"key": "per_page",
+											"value": "2",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "client-sales create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "customer_id",
+											"value": "6",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "100.00",
+											"type": "text"
+										},
+										{
+											"key": "date",
+											"value": "2025-06-28",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "completed",
+											"description": "pending,completed,cancelled",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/client-sales-create",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-sales-create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "client sales details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/client-sales-details/7?customer_id=6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-sales-details",
+										"7"
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "6"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "client sales update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "customer_id",
+											"value": "6",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "100.00",
+											"type": "text"
+										},
+										{
+											"key": "date",
+											"value": "2025-07-28",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "pending",
+											"description": "pending,completed,cancelled",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/client-sales-update/6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-sales-update",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "client sales delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/client-sales-destroy/6?customer_id=6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"client-sales-destroy",
+										"6"
+									],
+									"query": [
+										{
+											"key": "customer_id",
+											"value": "6"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "User-Nodes",
+			"item": [
+				{
+					"name": "Note",
+					"item": [
+						{
+							"name": "user-notes-create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Task1www",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Task discuss the upcomming project",
+											"type": "text"
+										},
+										{
+											"key": "date",
+											"value": "2025-08-29",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/user-notes-create",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user-notes-create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user-note-details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/user-notes-details/14",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user-notes-details",
+										"14"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user-note-update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "meeting with tom",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "lorem1289",
+											"type": "text"
+										},
+										{
+											"key": "date",
+											"value": "2025-06-30",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/user-notes-update/14",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user-notes-update",
+										"14"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user-notes-delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/user-notes-destroy/14",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user-notes-destroy",
+										"14"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Voice",
+					"item": [
+						{
+							"name": "Voice-create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "My First Voice Note11qww",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "This is a short test voice file.",
+											"type": "text"
+										},
+										{
+											"key": "duration",
+											"value": "60",
+											"type": "text"
+										},
+										{
+											"key": "voice_file",
+											"type": "file",
+											"src": []
+										},
+										{
+											"key": "date",
+											"value": "2025-08-19",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/user-voice/note-create",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user-voice",
+										"note-create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "voice-details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/user-voice/note-details/11",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user-voice",
+										"note-details",
+										"11"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Voice-update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "My First Voice Note11q1",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "This is a short test voice file.",
+											"type": "text"
+										},
+										{
+											"key": "duration",
+											"value": "600",
+											"type": "text"
+										},
+										{
+											"key": "voice_file",
+											"type": "file",
+											"src": "/C:/Users/HP/Downloads/audio3.mp3"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/user-voice/note-update/12",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user-voice",
+										"note-update",
+										"12"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "voice-delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/user-voice/note-destroy/12",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user-voice",
+										"note-destroy",
+										"12"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User-notes-list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{base_url}}/user-notes-list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user-notes-list"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "Task1www",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User-Tasting",
+			"item": [
+				{
+					"name": "user-tasting-list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user-tasting-list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user-tasting-list"
+							],
+							"query": [
+								{
+									"key": "customer_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "4",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-tasting-create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Tastingedfwfsaa",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": " alcoholic drink made from fermented fruit. Yeast consumes the sugar in the fruit and converts it to ethanol and carbon dio",
+									"type": "text"
+								},
+								{
+									"key": "product_id[0]",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "product_id[1]",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "date",
+									"value": "2025-07-24",
+									"description": "format('Y-m-d'),",
+									"type": "text"
+								},
+								{
+									"key": "time",
+									"value": "05:00",
+									"description": "time format = H:i",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user-tasting-create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user-tasting-create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-task-details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user-tasting-details/14",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user-tasting-details",
+								"14"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-tasting-update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "tasting",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": " alcoholic drink made from fermented fruit. Yeast consumes the sugar in the fruit and converts it to ethanol and carbon dio",
+									"type": "text"
+								},
+								{
+									"key": "date",
+									"value": "2025-07-24",
+									"description": "format('Y-m-d'),",
+									"type": "text"
+								},
+								{
+									"key": "time",
+									"value": "05:00",
+									"description": "time format = H:i",
+									"type": "text"
+								},
+								{
+									"key": "product_id[0]",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "product_id[1]",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user-tasting-update/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user-tasting-update",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-Tasting Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user-tasting-destroy/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user-tasting-destroy",
+								"11"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Docs",
+			"item": [
+				{
+					"name": "user-docs-list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user-docs-list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user-docs-list"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "4",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-document-create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file[]",
+									"type": "file",
+									"src": "/C:/Users/Tomas/Downloads/download (3).jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user-docs-create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user-docs-create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "client-document-details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user-docs-details/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user-docs-details",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "client-document Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user-docs-destroy/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user-docs-destroy",
+								"11"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CMS",
+			"item": [
+				{
+					"name": "FAQ",
+					"item": [
+						{
+							"name": "Faq",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{vault:authorization-secret}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/user-list-faq",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user-list-faq"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "support",
+					"item": [
+						{
+							"name": "Support-list",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{vault:authorization-secret}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/user-list-support",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user-list-support"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "checkout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"success_url\": \"https://gogobarter.com\",\r\n    \"cancel_url\": \"https://gogobarter.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/subscriptions/3/checkout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"subscriptions",
+								"3",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "No Need",
+			"item": [
+				{
+					"name": "T&C_And_Privacy_Policy",
+					"item": [
+						{
+							"name": "Index",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/contents?type=termsAndConditions",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"contents"
+									],
+									"query": [
+										{
+											"key": "type",
+											"value": "termsAndConditions",
+											"description": "Accept only 'termsAndConditions' or 'privacyPolicy'"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Message",
+					"item": [
+						{
+							"name": "send_message",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "message",
+											"value": "Hello! I am from user...",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/messages/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"messages",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "receive_message",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/messages/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"messages",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getUsersWithLastMessage",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/users-with-last-message",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users-with-last-message"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "base_url",
+			"value": "admin.winecrm.app/api",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}

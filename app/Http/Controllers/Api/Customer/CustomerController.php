@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
-    //customer list api---
+    /**
+     * customer list api
+     */
     public function index(Request $request)
     {
         try {
@@ -57,7 +59,9 @@ class CustomerController extends Controller
     }
 
 
-    //---customer create
+    /**
+     * customer create
+     */
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -73,7 +77,6 @@ class CustomerController extends Controller
             'tag_id' => 'required|array',
             'tag_id.*' => 'exists:tags,id',
             'description' => 'required|string|max:600',
-            'image' => 'required|image|mimes:jpg,jpeg,png,gif,webp,bmp,svg|max:10240',
             'longitude' => 'nullable|numeric',
             'latitude' => 'nullable|numeric',
         ]);
@@ -85,10 +88,7 @@ class CustomerController extends Controller
         $data = $validator->validated();
         $data['user_id'] = Auth::id();
 
-        if ($request->hasFile('image')) {
-            $uploadedImage = Helper::fileUpload($request->file('image'), 'customers', $request->input('owner_name'));
-            $data['image'] = $uploadedImage;
-        }
+
         $customer = Customer::create($data);
         $tagIds = $data['tag_id'];
         $tags = Tag::whereIn('id', $tagIds)->get(['id', 'name', 'color']);
@@ -102,7 +102,9 @@ class CustomerController extends Controller
     }
 
 
-    //--customer-details
+    /**
+     * customer-details
+     */
     public function details($id)
     {
         try {
@@ -129,7 +131,9 @@ class CustomerController extends Controller
         }
     }
 
-    //--customer update
+    /**
+     * customer update
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -144,7 +148,6 @@ class CustomerController extends Controller
                 'email' => 'nullable|email|max:60',
                 'website' => 'nullable|url',
                 'description' => 'nullable|string|max:600',
-                'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp,bmp,svg|max:10240',
                 'longitude' => 'nullable|numeric',
                 'latitude' => 'nullable|numeric',
                 'tag_id' => 'nullable',
@@ -162,19 +165,6 @@ class CustomerController extends Controller
                 return Helper::jsonResponse(false, 'Customer Not Found!', 404);
             }
 
-            // Image --
-            if ($request->hasFile('image')) {
-                if ($customer->image) {
-                    $parsedUrl = parse_url($customer->image, PHP_URL_PATH);
-                    $oldImagePath = ltrim($parsedUrl, '/');
-                    Helper::fileDelete($oldImagePath);
-                }
-
-                $uploadedImage = Helper::fileUpload($request->file('image'), 'customers', $request->input('owner_name'));
-                $data['image'] = $uploadedImage;
-            }
-
-
             $customer->update($data);
             //tag get and show
             $tags = collect($customer->tag_id)->isNotEmpty() ? Tag::whereIn('id', $customer->tag_id)->get(['id', 'name', 'color']) : [];
@@ -191,7 +181,9 @@ class CustomerController extends Controller
     }
 
 
-    //--Customer delete
+    /**
+     * Customer delete
+     */
     public function destroy($id)
     {
         try {
@@ -201,14 +193,6 @@ class CustomerController extends Controller
             if (!$customer) {
                 return Helper::jsonResponse(false, 'Customer Not Found!', 404);
             }
-
-            $defaultImageUrl = asset('default/customer/defult_image.png');
-            if ($customer->image && $customer->image !== $defaultImageUrl) {
-                $parsedUrl = parse_url($customer->image, PHP_URL_PATH);
-                $oldImagePath = ltrim($parsedUrl, '/');
-                Helper::fileDelete($oldImagePath);
-            }
-
             $customer->delete();
 
             return Helper::jsonResponse(true, 'Customer Deleted Successfully!', 200);

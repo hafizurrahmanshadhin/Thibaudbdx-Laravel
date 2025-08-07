@@ -1,6 +1,6 @@
 @extends('frontend.app')
 
-@section('title', 'Admin Dashboard Dosix')
+@section('title', 'Admin Dashboard Thibaudbdx')
 
 @push('styles')
     <style>

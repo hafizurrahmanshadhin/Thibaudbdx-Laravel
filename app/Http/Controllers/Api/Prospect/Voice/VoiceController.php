@@ -64,6 +64,7 @@ class VoiceController extends Controller
                 'title' => 'required|string|max:255',
                 'customer_id' => 'required|exists:customers,id',
                 'description' => 'required|string|max:600',
+                'date' => 'required|date|after_or_equal:today',
                 'voice_file' => 'required|file|mimes:mp3,wav,aac|max:40000',
                 'duration' => 'required|integer|min:1|max:600',
             ]);
@@ -90,6 +91,7 @@ class VoiceController extends Controller
                 'user_id'      => Auth::id(),
                 'customer_id'  => $request->input('customer_id'),
                 'description'  => $request->input('description'),
+                'date'  => $request->input('date'),
                 'voice_file'   => $filePath,
                 'duration'     => $request->input('duration'),
             ]);
@@ -133,6 +135,7 @@ class VoiceController extends Controller
                 'title' => 'nullable|string|max:255',
                 'customer_id' => 'nullable|exists:customers,id',
                 'description' => 'nullable|string|max:600',
+                'date' => 'nullable|date|after_or_equal:today',
                 'voice_file' => 'nullable|file|mimes:mp3,wav,aac|max:40000',
                 'duration' => 'nullable|integer|min:1|max:600',
             ]);

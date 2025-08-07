@@ -13,35 +13,48 @@ use Illuminate\Support\Facades\Validator;
 
 class NotesController extends Controller
 {
-    //List Notes Voices and notes 
+
+    /**
+     * List Notes and Voices for the user
+     */
     public function NotesList(Request $request)
     {
         try {
-            $search  = trim($request->query('search', ''));
-            $userId  = Auth::id();
+            $search      = trim($request->query('search', ''));
+            $userId      = Auth::id();
 
-            $voices = Voice::where('user_id', $userId)->whereNull('customer_id')
+            $voices = Voice::where('user_id', $userId)
+                ->whereNull('customer_id')
                 ->when($search, function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%");
-                })->get();
+                })->get()
+                ->map(function ($item) {
+                    $item->type = 'voices';
+                    return $item;
+                });
 
-            $Notes = Task::where('user_id', $userId)->whereNull('customer_id')
+            $notes = Task::where('user_id', $userId)
+                ->whereNull('customer_id')
                 ->when($search, function ($q) use ($search) {
                     $q->where(function ($query) use ($search) {
                         $query->where('name', 'like', "%{$search}%")
                             ->orWhere('description', 'like', "%{$search}%");
                     });
-                })->get();
-            return Helper::jsonResponse(true, 'Notes list successfully', 200, [
-                'Notes' => $Notes,
-                'voices' => $voices,
-            ]);
+                })->get()->map(function ($item) {
+                    $item->type = 'notes';
+                    return $item;
+                });
+
+            $data = collect()->merge($notes)->merge($voices)->sortByDesc('created_at')->values();
+
+            return Helper::jsonResponse(true, 'Notes list retrieved successfully.', 200, $data);
         } catch (\Exception $e) {
             return Helper::jsonResponse(false, 'Server Error', 500, [
                 'error' => $e->getMessage(),
             ]);
         }
     }
+
 
     // ============================> Notes <=========================
     //user-notes-create
@@ -150,6 +163,7 @@ class NotesController extends Controller
             $validator = Validator::make($request->all(), [
                 'title' => 'required|string|max:255',
                 'description' => 'required|string|max:600',
+                'date' => 'required|date|after_or_equal:today',
                 'voice_file' => 'required|file|mimes:mp3,wav,aac|max:40000',
                 'duration' => 'required|integer|min:1|max:600',
             ]);
@@ -170,6 +184,7 @@ class NotesController extends Controller
                 'title'        => $request->input('title'),
                 'user_id'  => Auth::user()->id,
                 'description'  => $request->input('description'),
+                'date'         => $request->input('date'),
                 'voice_file'   => $filePath,
                 'duration'     => $request->input('duration'),
             ]);
@@ -206,6 +221,7 @@ class NotesController extends Controller
             $validator = Validator::make($request->all(), [
                 'title' => 'nullable|string|max:255',
                 'description' => 'nullable|string|max:600',
+                'date' => 'nullable|date|after_or_equal:today',
                 'voice_file' => 'nullable|file|mimes:mp3,wav,aac|max:40000',
                 'duration' => 'nullable|integer|min:1|max:600',
             ]);

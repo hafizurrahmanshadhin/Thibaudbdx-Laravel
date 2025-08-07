@@ -9,6 +9,20 @@ class Voice extends Model
     protected $guarded = [];
     protected $hidden = ['updated_at', 'deleted_at', 'customer', 'customer_id', 'user_id'];
 
+    protected $casts = [
+        'customer_id'  => 'integer',
+        'user_id'      => 'integer',
+        'title'        => 'string',
+        'description'  => 'string',
+        'voice_file'   => 'string',
+        'duration'     => 'integer',
+        'date'         => 'date',
+        'status'       => 'string',
+        'created_at'   => 'datetime',
+        'updated_at'   => 'datetime',
+        'deleted_at'   => 'datetime',
+    ];
+
 
     public function customer()
     {

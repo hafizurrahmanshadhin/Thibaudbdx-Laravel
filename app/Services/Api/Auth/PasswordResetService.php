@@ -17,30 +17,29 @@ class PasswordResetService
      */
     public function sendOtpToEmail(string $email): array
     {
-        try {
-            $user = User::where('email', $email)->first();
-            if (!$user) {
-                throw new Exception('Invalid Email Address');
-            }
+        $user = User::where('email', $email)->first();
 
-            // $otp = rand(1000, 9999);
-            $otp = "1234";
-            // Mail::to($email)->send(new OTPMail($otp));
-
-            PasswordReset::updateOrCreate(
-                ['email' => $email],
-                ['otp' => $otp, 'created_at' => Carbon::now()]
-            );
-
-            return [
-                'message' => 'OTP Code Sent Successfully',
-                'otp'     => $otp,
-            ];
-        } catch (Exception $e) {
-            throw $e;
+        if (!$user) {
+            throw new Exception('Invalid Email Address');
         }
-    }
 
+        $otp = rand(1000, 9999);
+        $customMessage = 'This OTP is valid for 10 minutes.';
+
+        // Send OTP via email
+        Mail::to($email)->send(new OTPMail($otp, $user, $customMessage));
+
+        // Store or update OTP in password_resets table
+        PasswordReset::updateOrCreate(
+            ['email' => $email],
+            ['otp' => $otp, 'created_at' => now()]
+        );
+
+        return [
+            'message' => 'OTP Code Sent Successfully',
+            'otp'     => $otp,
+        ];
+    }
     /**
      * Verify the provided OTP code.
      */

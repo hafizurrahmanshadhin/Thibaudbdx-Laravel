@@ -44,6 +44,8 @@ class UserTastingController extends Controller
             'name' => 'required|string|max:255|unique:tastings,name',
             'product_id' => 'required|array',
             'description' => 'required|string|max:600',
+            'date' => 'nullable|date|after_or_equal:today',
+            'time' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -97,7 +99,9 @@ class UserTastingController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'nullable|string|max:200',
                 'description' => 'nullable|string|max:500',
-                'product_id' => 'required|array',
+                'product_id' => 'nullable|array',
+                'date' => 'nullable|date|after_or_equal:today',
+                'time' => 'nullable',
             ]);
 
             if ($validator->fails()) {

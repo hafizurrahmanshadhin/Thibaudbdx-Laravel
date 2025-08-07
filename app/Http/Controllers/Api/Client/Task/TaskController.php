@@ -62,7 +62,8 @@ class TaskController extends Controller
                 'name' => 'required|string|max:200',
                 'customer_id' => 'required|exists:customers,id',
                 'description' => 'required|string|max:600',
-                'date' => 'required|date|after_or_equal:today'
+                'date' => 'required|date|after_or_equal:today',
+                'time' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
@@ -122,6 +123,7 @@ class TaskController extends Controller
                 'customer_id' => 'nullable|exists:customers,id',
                 'description' => 'nullable|string|max:500',
                 'date' => 'nullable|date|after_or_equal:today',
+                'time' => 'nullable',
             ]);
 
             if ($validator->fails()) {

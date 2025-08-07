@@ -109,4 +109,50 @@ class PasswordResetController extends Controller
             return $this->helper->jsonResponse(false, 'something went wrong', 403);
         }
     }
+
+    /**
+     * Update user profile information.
+     */
+    public function updateProfile(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'nullable|string|max:100',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+        ]);
+
+        try {
+            $user = auth('api')->user();
+            // Handle avatar image update
+            if ($request->hasFile('avatar')) {
+                // Delete old image if exists
+                if ($user->avatar) {
+                    $parsedUrl = parse_url($user->avatar, PHP_URL_PATH);
+                    $oldImagePath = ltrim($parsedUrl, '/');
+                    Helper::fileDelete($oldImagePath);
+                }
+
+                // Upload new image
+                $uploadedImage = Helper::fileUpload(
+                    $request->file('avatar'),
+                    'userProfile',
+                    ($request->file('avatar'))
+                );
+
+                $validatedData['avatar'] = $uploadedImage;
+            }
+            $user->update($validatedData);
+            return Helper::jsonResponse(true, 'Profile updated successfully', 200, $user);
+        } catch (Exception $e) {
+            return Helper::jsonResponse(false, 'Something went wrong', 403);
+        }
+    }
+
+    /**
+     * Get user information.
+     */
+    public function userInfo()
+    {
+        // dd(auth('api')->user()); // Remove this for production
+        return Helper::jsonResponse(true, 'User details fetched successfully', 200, auth('api')->user());
+    }
 }

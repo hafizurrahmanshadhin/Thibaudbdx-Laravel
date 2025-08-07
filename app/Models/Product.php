@@ -28,4 +28,26 @@ class Product extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected $casts = [
+        'user_id' => 'integer',
+        'wine_name' => 'string',
+        'cuvee' => 'string',
+        'type' => 'string',
+        'color' => 'string',
+        'soil_type' => 'string',
+        'harvest_ageing' => 'string',
+        'food' => 'string',
+        'tasting_notes' => 'string',
+        'awards' => 'string',
+        'image' => 'string',
+        'company_name' => 'string',
+        'address' => 'string',
+        'phone' => 'string',
+        'email' => 'string',
+        'website' => 'string',
+        'status' => 'string',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 }

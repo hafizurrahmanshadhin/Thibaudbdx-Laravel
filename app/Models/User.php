@@ -71,4 +71,18 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Tasting::class);
     }
+
+    /**
+     * live link for avatar image
+     */
+    public function getAvatarAttribute($value): ?string
+    {
+        if (empty($value)) {
+            return null;
+        }
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            return $value;
+        }
+        return url($value);
+    }
 }

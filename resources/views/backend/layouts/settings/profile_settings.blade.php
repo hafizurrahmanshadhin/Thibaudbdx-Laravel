@@ -124,19 +124,18 @@
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="mb-3">
-                                                    <label for="first_name" class="form-label">First Name</label>
+                                                    <label for="first_name" class="form-label">Name</label>
                                                     <input type="text"
-                                                        class="form-control @error('first_name') is-invalid @enderror"
-                                                        id="first_name" name="first_name"
-                                                        placeholder="Enter Your First Name"
-                                                        value="{{ Auth::user()->first_name }}">
-                                                    @error('first_name')
+                                                        class="form-control @error('name') is-invalid @enderror"
+                                                        id="name" name="name" placeholder="Enter Your Name"
+                                                        value="{{ Auth::user()->name }}">
+                                                    @error('name')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
                                             </div>
 
-                                            <div class="col-lg-6">
+                                            {{-- <div class="col-lg-6">
                                                 <div class="mb-3">
                                                     <label for="last_name" class="form-label">Last Name</label>
                                                     <input type="text"
@@ -147,7 +146,7 @@
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                                             <div class="col-lg-6">
                                                 <div class="mb-3">

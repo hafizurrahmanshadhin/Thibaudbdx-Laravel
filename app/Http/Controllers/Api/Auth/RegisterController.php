@@ -120,15 +120,15 @@ class RegisterController extends Controller
                 return $this->helper->jsonResponse(true, 'Email already verified .Login Here ?', 200);
             }
 
-            // $newOtp = rand(1000, 9999);
-            $newOtp = "1234";
+            $newOtp = rand(1000, 9999);
+            // $newOtp = "1234";
             $otpExpiresAt = Carbon::now()->addMinutes(60);
             $user->otp = $newOtp;
             $user->otp_expires_at = $otpExpiresAt;
             $user->save();
 
             try {
-                // Mail::to($user->email)->send(new OTPMail($newOtp));
+                Mail::to($user->email)->send(new OTPMail($newOtp));
                 return $this->helper->jsonResponse(true, 'A new OTP has been sent to your email.', 200);
             } catch (Exception $e) {
                 return $this->helper->jsonResponse(false, 'Something worng', 500, ['error' => $e->getMessage()]);

@@ -21,17 +21,12 @@ class ProductControler extends Controller
         try {
             $perPage = $request->query('per_page', 25);
             $userId = Auth::id();
-            // Start query builder
             $products = Product::where('user_id', $userId)->paginate($perPage);;
-            if ($products->isEmpty()) {
-                return Helper::jsonResponse(false, 'No products found.', 404);
-            }
             return Helper::jsonResponse(true, 'Product list retrieved successfully.', 200, $products);
         } catch (\Exception $e) {
             return Helper::jsonResponse(false, 'Server Error', 500, ['error' => $e->getMessage()]);
         }
     }
-
 
     //-- product create api
     public function create(Request $request)

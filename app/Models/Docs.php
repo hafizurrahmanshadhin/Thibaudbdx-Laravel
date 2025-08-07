@@ -9,7 +9,15 @@ class Docs extends Model
     protected $guarded = [];
     protected $hidden = ['updated_at', 'deleted_at', 'status', 'user_id', 'customer_id'];
 
-
+    protected $casts = [
+        'customer_id' => 'integer',
+        'user_id'     => 'integer',
+        'file'        => 'string',
+        'status'      => 'string',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'deleted_at'  => 'datetime',
+    ];
 
     public function customer()
     {

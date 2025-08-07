@@ -45,6 +45,8 @@ class TastingController extends Controller
         $validator = Validator::make($request->all(), [
             'customer_id' => 'required|exists:customers,id',
             'name' => 'required|string|max:255|unique:tastings,name',
+            'date' => 'required|date|after_or_equal:today',
+            'time' => 'nullable',
             'product_id' => 'required|array',
             'description' => 'required|string|max:600',
         ]);
@@ -90,7 +92,7 @@ class TastingController extends Controller
 
             return Helper::jsonResponse(true, 'Tasting Details Retrieved Successfully!', 200, [
                 'tasting' => $tasting,
-                'Product List' => $products,
+                'product_list' => $products,
             ]);
         } catch (\Exception $e) {
             return Helper::jsonResponse(false, 'Error occurred:', 500, [$e->getMessage()]);
@@ -103,9 +105,11 @@ class TastingController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'nullable|string|max:200',
+                'date' => 'nullable|date|after_or_equal:today',
+                'time' => 'nullable',
                 'customer_id' => 'nullable|exists:customers,id',
                 'description' => 'nullable|string|max:500',
-                'product_id' => 'required|array',
+                'product_id' => 'nullable|array',
             ]);
 
             if ($validator->fails()) {

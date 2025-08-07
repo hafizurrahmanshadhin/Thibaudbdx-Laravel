@@ -38,8 +38,8 @@ class UserSeeder extends Seeder
             ],
             [
                 'id'                   => 3,
-                'name'            => 'Shadhin',
-                'email'                => 'shadhin666@gmail.com',
+                'name'            => 'tomas',
+                'email'                => 'mdtomasuddin1@gmail.com',
                 'email_verified_at'    => Carbon::now(),
                 'password'             => Hash::make('12345678'),
                 'terms_and_conditions' => true,
@@ -51,7 +51,7 @@ class UserSeeder extends Seeder
             [
                 'id'                   => 4,
                 'name'            => 'tomas',
-                'email'                => 'mdtomasuddin1@gmail.com',
+                'email'                => 'abuessaflutterdev@gmail.com',
                 'email_verified_at'    => Carbon::now(),
                 'password'             => Hash::make('12345678'),
                 'terms_and_conditions' => true,

@@ -22,6 +22,8 @@ Route::prefix('auth')->middleware(['throttle:10,1'])->group(function () {
             Route::post('/verify-otp', 'verifyOTP');
             Route::post('/reset-password', 'resetPassword');
             Route::post('/update-password',  'changePassword')->middleware('auth.jwt');
+            Route::get('/user-info',  'userInfo')->middleware('auth.jwt');
+            Route::post('/update-profile',  'updateProfile')->middleware('auth.jwt');
         });
 
     Route::post('/socialite-login', [SocialiteController::class, 'socialiteLogin']);

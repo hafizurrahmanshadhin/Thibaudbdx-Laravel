@@ -11,4 +11,17 @@ class Plan extends Model
     {
         return $this->hasMany(Subscription::class, 'plan_id');
     }
+    protected $casts = [
+        'name'            => 'string',
+        'billing_interval' => 'string',
+        'price'           => 'decimal:2',
+        'currency'        => 'string',
+        'description'     => 'string',
+        'features'        => 'array',
+        'is_recommended'  => 'boolean',
+        'status'          => 'string',
+        'created_at'      => 'datetime',
+        'updated_at'      => 'datetime',
+        'deleted_at'      => 'datetime',
+    ];
 }

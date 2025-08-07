@@ -8,11 +8,9 @@ class Task extends Model
 {
 
     protected $guarded = [];
-    protected $hidden = ['updated_at', 'deleted_at', 'status', 'customer_id', 'user_id'];
+    protected $hidden = ['updated_at', 'deleted_at', 'status', 'customer_id','customer', 'user_id'];
 
-    protected $casts = [
-        'date' => 'date',
-    ];
+
 
     public function customer()
     {
@@ -23,4 +21,16 @@ class Task extends Model
     {
         return $this->belongsTo(User::class);
     }
+    protected $casts = [
+        'name'         => 'string',
+        'customer_id'  => 'integer',
+        'user_id'      => 'integer',
+        'date'         => 'date',
+        'time' => 'string',
+        'description'  => 'string',
+        'status'       => 'string',
+        'created_at'   => 'datetime',
+        'updated_at'   => 'datetime',
+        'deleted_at'   => 'datetime',
+    ];
 }

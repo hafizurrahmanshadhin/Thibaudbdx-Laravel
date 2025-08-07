@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -28,7 +29,6 @@ class OTPMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Your OTP Key')->view('mail.otpmail');
+        return $this->subject('Your OTP Key')->view('email.OTPMail');
     }
 }
-

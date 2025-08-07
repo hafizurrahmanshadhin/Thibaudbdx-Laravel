@@ -11,11 +11,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
-class SocialiteController extends Controller {
+class SocialiteController extends Controller
+{
     protected SocialiteService $socialiteService;
     private Helper $helper;
 
-    public function __construct(SocialiteService $socialiteService, Helper $helper) {
+    public function __construct(SocialiteService $socialiteService, Helper $helper)
+    {
         $this->socialiteService = $socialiteService;
         $this->helper           = $helper;
     }
@@ -23,7 +25,8 @@ class SocialiteController extends Controller {
     /**
      * Handle socialite login.
      */
-    public function socialiteLogin(Request $request): JsonResponse {
+    public function socialiteLogin(Request $request): JsonResponse
+    {
         $request->validate([
             'token'    => 'required|string',
             'provider' => 'required|string|in:google,facebook,apple',
@@ -32,19 +35,35 @@ class SocialiteController extends Controller {
         try {
             $token    = $request->input('token');
             $provider = $request->input('provider');
+
             $response = $this->socialiteService->loginWithSocialite($provider, $token);
 
-            return $this->helper->jsonResponse(
-                true,
-                $response['message'],
-                $response['code'],
-                $response['data']
-            );
+            // Extract parts from the response array
+            return response()->json([
+                'status'     => true,
+                'message'    => $response['message'],
+                'code'       => $response['code'],
+                'token_type' => $response['token_type'],
+                'token'      => $response['token'],
+                'data'       => $response['data'],
+            ], $response['code']);
         } catch (UnauthorizedHttpException $e) {
-            return $this->helper->jsonResponse(false, 'Unauthorized', 401, null, ['error' => $e->getMessage()]);
+            return response()->json([
+                'status'  => false,
+                'message' => 'Unauthorized',
+                'code'    => 401,
+                'data'    => null,
+                'error'   => $e->getMessage(),
+            ], 401);
         } catch (Exception $e) {
             Log::error('Socialite Login Error: ' . $e->getMessage());
-            return $this->helper->jsonResponse(false, 'Something went wrong', 500, null, ['error' => $e->getMessage()]);
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong',
+                'code'    => 500,
+                'data'    => null,
+                'error'   => $e->getMessage(),
+            ], 500);
         }
     }
 }

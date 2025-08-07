@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->date('date')->nullable();
+            $table->time('time')->nullable();
             $table->text('description')->nullable();
             $table->enum('status', ['active', 'inactive', 'in_progress', 'upcoming', 'completed'])->default('active');
             $table->timestamps();

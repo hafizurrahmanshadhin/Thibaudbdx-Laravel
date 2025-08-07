@@ -21,13 +21,30 @@ class Customer extends Model
         'website',
         'tag_id',
         'description',
-        'image',
         'longitude',
         'latitude',
         'status'
     ];
+
     protected $casts = [
+        'user_id' => 'integer',
+        'contact_type' => 'string',
+        'company_name' => 'string',
+        'owner_name' => 'string',
+        'address' => 'string',
+        'city' => 'string',
+        'zip_code' => 'string',
+        'phone' => 'string',
+        'email' => 'string',
+        'website' => 'string',
+        'description' => 'string',
         'tag_id' => 'array',
+        'longitude' => 'float',
+        'latitude' => 'float',
+        'status' => 'string',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
 

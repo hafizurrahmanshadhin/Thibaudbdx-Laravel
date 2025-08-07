@@ -10,7 +10,17 @@ class Tasting extends Model
     protected $hidden = ['updated_at', 'deleted_at', 'product_id', 'customer', 'customer_id', 'user_id'];
 
     protected $casts = [
-        'product_id' => 'array',
+        'customer_id'  => 'integer',
+        'user_id'      => 'integer',
+        'name'         => 'string',
+        'date'         => 'date',
+        'product_id'   => 'array',
+        'description'  => 'string',
+        'type'         => 'string',
+        'status'       => 'string',
+        'created_at'   => 'datetime',
+        'updated_at'   => 'datetime',
+        'deleted_at'   => 'datetime',
     ];
 
     public function customer()

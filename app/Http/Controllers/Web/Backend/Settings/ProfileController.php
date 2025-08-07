@@ -13,14 +13,16 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
-class ProfileController extends Controller {
+class ProfileController extends Controller
+{
     /**
      * Display the user's profile settings page.
      *
      * @param Request $request
      * @return View
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $user = User::find($request->id);
         return view('backend.layouts.settings.profile_settings', compact('user'));
     }
@@ -31,10 +33,12 @@ class ProfileController extends Controller {
      * @param Request $request
      * @return RedirectResponse
      */
-    public function UpdateProfile(Request $request) {
+    public function UpdateProfile(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'first_name'   => 'required|string|max:200|min:2',
-            'last_name'    => 'required|string|max:200|min:2',
+            // 'first_name'   => 'required|string|max:200|min:2',
+            // 'last_name'    => 'required|string|max:200|min:2',
+            'name'         => 'required|string|max:200|min:2',
             'phone_number' => 'required|numeric|unique:users,phone_number,' . auth()->user()->id,
             'email'        => 'required|email|unique:users,email,' . auth()->user()->id,
         ]);
@@ -44,8 +48,9 @@ class ProfileController extends Controller {
         }
         try {
             $user               = User::find(auth()->user()->id);
-            $user->first_name   = $request->first_name;
-            $user->last_name    = $request->last_name;
+            // $user->first_name   = $request->first_name;
+            // $user->last_name    = $request->last_name;
+            $user->name         = $request->name;
             $user->phone_number = $request->phone_number;
             $user->email        = $request->email;
 
@@ -62,7 +67,8 @@ class ProfileController extends Controller {
      * @param Request $request
      * @return RedirectResponse
      */
-    public function UpdatePassword(Request $request) {
+    public function UpdatePassword(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
             'password'     => 'required|confirmed|min:8',
@@ -92,7 +98,8 @@ class ProfileController extends Controller {
      * @param Request $request
      * @return RedirectResponse
      */
-    public function UpdateProfilePicture(Request $request) {
+    public function UpdateProfilePicture(Request $request)
+    {
         $request->validate([
             'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
@@ -136,7 +143,8 @@ class ProfileController extends Controller {
      * @param Request $request
      * @return RedirectResponse
      */
-    public function UpdateCoverPhoto(Request $request) {
+    public function UpdateCoverPhoto(Request $request)
+    {
         $request->validate([
             'cover_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);

@@ -15,9 +15,9 @@ class TagController extends Controller
     {
         try {
             $search = $request->query('search', '');
-            $per_page = $request->query('per_page', 10);
+            $per_page = $request->query('per_page', 200);
             $userId = Auth::user()->id;
-            $tag = Tag::where('user_id', $userId)->select('name', 'color', 'created_at');
+            $tag = Tag::where('user_id', $userId)->select('id', 'name', 'color', 'created_at');
 
             if (!empty(trim($search))) {
                 $tag->where(function ($q) use ($search) {

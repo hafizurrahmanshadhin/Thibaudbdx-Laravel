@@ -40,7 +40,6 @@ class CustomerSeeder extends Seeder
                 'website' => "https://company{$i}.com",
                 'tag_id' => json_encode([rand(1, 5), rand(6, 10)]),
                 'description' => fake()->sentence(10),
-                'image' => '/default/customer/defult_image.png',
                 'longitude' => -73.985130 + ($i * 0.01),
                 'latitude' => 40.748817 + ($i * 0.01),
                 'created_at' => now(),

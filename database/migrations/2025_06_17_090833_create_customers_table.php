@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('contact_type', ['prospect', 'customer', 'inactive']);
+            $table->enum('contact_type', ['prospect', 'customer', 'inactive'])->default('prospect');
             $table->string('company_name', 255)->nullable();
             $table->string('owner_name')->nullable();
             $table->string('address')->nullable();
@@ -25,7 +25,6 @@ return new class extends Migration
             $table->string('website')->nullable();
             $table->json('tag_id')->nullable();
             $table->string('description')->nullable();
-            $table->string('image')->nullable();
             $table->decimal('longitude', 10, 8)->nullable();
             $table->decimal('latitude', 10, 6)->nullable();
             $table->enum('status', ['active', 'inactive', 'cancelled'])->default('active');

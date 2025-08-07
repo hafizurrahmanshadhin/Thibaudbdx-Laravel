@@ -18,10 +18,15 @@ class TastingSeeder extends Seeder
 
         foreach (range(1, 13) as $i) {
             Tasting::create([
-                'customer_id' => $i <= 5 ? 1 : ($i <= 10 ? 6 : null), // 1-5 → 1, 6-10 → 6, 11-13 → null
+                'customer_id' => $i <= 5 ? 1 : ($i <= 10 ? 6 : 1),
                 'user_id' => 4,
                 'name' => 'Tasting ' . $i,
-                'product_id' => json_encode([$faker->numberBetween(1, 5), $faker->numberBetween(6, 8),]),
+                'date' => $faker->dateTimeBetween('now', '+1 month')->format('Y-m-d'),
+                'time' => $faker->time('H:i'),
+                'product_id' => json_encode([
+                    $faker->numberBetween(1, 5),
+                    $faker->numberBetween(6, 8),
+                ]),
                 'description' => $faker->sentence,
                 'status' => 'active',
             ]);

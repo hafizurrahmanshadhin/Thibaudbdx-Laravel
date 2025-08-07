@@ -149,4 +149,15 @@ class Helper
             return null;
         }
     }
+
+    public static function jsonErrorResponse(string $message, int $code = 400, array $errors = []): JsonResponse
+    {
+        $response = [
+            'status' => false,
+            'message' => $message,
+            'code' => $code,
+            'errors' => $errors,
+        ];
+        return response()->json($response, $code);
+    }
 }
